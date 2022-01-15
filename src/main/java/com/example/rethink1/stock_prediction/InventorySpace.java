@@ -1,0 +1,38 @@
+package com.example.rethink1.stock_prediction;
+
+import java.util.ArrayList;
+
+/**
+ * Class describes an Inventory space for the supermarket
+ * Each Inventory object has products and number of products in the inventory.
+ */
+public class InventorySpace {
+    protected ArrayList<Product> products = new ArrayList<>();
+    protected int numberProducts = 0;
+
+    /** Removes a product from the inventory space. Done when a customer buys a product
+     * @param product Product being bought by the customer
+     */
+    public void removeProduct(Product product) {
+        // if removing it is valid then
+        if (numberProducts > 0) {
+            // reduce the number of products
+            --numberProducts;
+
+            for (Product p : this.products) {
+                if(p.getProductUID().equals(product.getProductUID())) {
+                    // if there are more than one quantity of the product
+                    if(p.getQuantity() > 1){
+                        // minus the quantity
+                        p.remove();
+                    }
+                    else {
+                        // else remove the product from the products arraylist
+                        products.remove(p);
+                    }
+                }
+            }
+        }
+    }
+
+}
