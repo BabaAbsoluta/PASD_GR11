@@ -1,12 +1,11 @@
-package com.example.rethink1.stock_prediction.events.listener;
+package com.example.rethink1.stock_prediction.events;
 
-import com.example.rethink1.stock_prediction.events.NewPredictionEvent;
 import org.springframework.context.ApplicationListener;
 
 public class NewPredictionEventListener implements ApplicationListener<NewPredictionEvent> {
     @Override
     public void onApplicationEvent(NewPredictionEvent event) {
         // what to do when event is triggered
-        System.out.println(event.toString());
+        System.out.println("Received spring event " + event.getMessage());
     }
 }

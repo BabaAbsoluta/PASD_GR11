@@ -7,8 +7,13 @@ import java.util.ArrayList;
  * Each Inventory object has products and number of products in the inventory.
  */
 public class InventorySpace {
-    protected ArrayList<Product> products = new ArrayList<>();
-    protected int numberProducts = 0;
+    protected ArrayList<Product> products;
+    protected int numberProducts;
+
+    public InventorySpace() {
+        this.products = new ArrayList<>();
+        this.numberProducts = 0;
+    }
 
     /** Removes a product from the inventory space. Done when a customer buys a product
      * @param product Product being bought by the customer
@@ -33,6 +38,22 @@ public class InventorySpace {
                 }
             }
         }
+    }
+
+    /**
+     * Adds products to the inventory. Done after supply order is recieved from the supplier
+     * @param product the product to add to the inventory
+     */
+    public void addProduct(Product product) {
+        for (Product p : this.products) {
+            // check if product exists in inventory, if it does then increment quantity
+            if (p.getProductUID().equals(product.getProductUID())) {
+                p.add();
+                return;
+            }
+        }
+        // else add product to the inventory
+        products.add(product);
     }
 
 }
