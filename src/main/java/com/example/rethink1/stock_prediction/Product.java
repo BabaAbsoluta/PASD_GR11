@@ -8,6 +8,7 @@ import com.example.rethink1.Supplier;
  */
 public class Product {
 
+    protected String name;
     protected int quantity;
     protected String productUID;
     protected Supplier supplier;
@@ -15,7 +16,8 @@ public class Product {
     protected long ean13;
     protected double vatRate;
 
-    public Product(int quantity, String productUID, Supplier supplier, double priceCents, long ean13, double vatRate) {
+    public Product(String name, int quantity, String productUID, Supplier supplier, double priceCents, long ean13, double vatRate) {
+        this.name = name;
         this.quantity = quantity;
         this.productUID = productUID;
         this.supplier = supplier;
@@ -30,6 +32,10 @@ public class Product {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void remove() {

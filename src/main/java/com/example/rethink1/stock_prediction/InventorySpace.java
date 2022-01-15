@@ -56,4 +56,21 @@ public class InventorySpace {
         products.add(product);
     }
 
+    /**
+     * Shows the contents of the inventory
+     */
+    public void show() {
+        // TODO: display inventory database in a nice manner
+    }
+
+    public Product findProduct(String name) {
+        for (Product p: this.products){
+            if (p.getName().equalsIgnoreCase(name)) {
+                return p;
+            }
+        }
+
+        return null;
+    }
+
 }
