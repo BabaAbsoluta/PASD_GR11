@@ -2,6 +2,7 @@ package com.example.rethink1;
 
 import com.example.rethink1.stock_ordering.VirtualBasket;
 import com.example.rethink1.stock_prediction.InventorySpace;
+import com.example.rethink1.stock_prediction.Manager;
 import com.example.rethink1.stock_prediction.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

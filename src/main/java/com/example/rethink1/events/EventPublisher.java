@@ -1,9 +1,10 @@
-package com.example.rethink1.stock_prediction.events;
+package com.example.rethink1.events;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 
-public class NewPredictionEventPublisher{
+public class EventPublisher implements ApplicationEventPublisherAware {
     @Autowired
     private ApplicationEventPublisher publisher;
 
@@ -12,7 +13,7 @@ public class NewPredictionEventPublisher{
     }
     public void publishEvent(final String message) {
         System.out.println("Publishing event " + message + ".\n");
-        NewPredictionEvent newPredictionEvent = new NewPredictionEvent(this, message);
-        publisher.publishEvent(newPredictionEvent);
+        Event event = new Event(this, message);
+        publisher.publishEvent(event);
     }
 }

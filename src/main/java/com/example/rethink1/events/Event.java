@@ -1,11 +1,11 @@
-package com.example.rethink1.stock_prediction.events;
+package com.example.rethink1.events;
 
 import org.springframework.context.ApplicationEvent;
 
-public class NewPredictionEvent extends ApplicationEvent {
+public class Event extends ApplicationEvent {
     private String message;
 
-    public NewPredictionEvent(Object source, String message) {
+    public Event(Object source, String message) {
         super(source);
         this.message = message;
     }
@@ -13,4 +13,5 @@ public class NewPredictionEvent extends ApplicationEvent {
     public String getMessage() {
         return message;
     }
+
 }

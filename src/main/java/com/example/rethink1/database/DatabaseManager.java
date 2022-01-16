@@ -67,7 +67,7 @@ public class DatabaseManager {
             manager = managerFactory.createEntityManager();
         }
         catch(PersistenceException e){
-            JOptionPane.showMessageDialog(null, "You cannot make use of this game sorry");
+            JOptionPane.showMessageDialog(null, "Error");
             System.exit(0);
         }
 
