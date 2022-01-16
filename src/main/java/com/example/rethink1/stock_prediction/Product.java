@@ -1,6 +1,6 @@
 package com.example.rethink1.stock_prediction;
 
-import com.example.rethink1.Supplier;
+import com.example.rethink1.stock_ordering.Supplier;
 
 /**
  * Describes a product object, each product has a quantity, a unique ID, a supplier which supplies the product

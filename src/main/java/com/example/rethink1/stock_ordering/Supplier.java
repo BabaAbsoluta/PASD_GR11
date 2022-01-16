@@ -1,4 +1,4 @@
-package com.example.rethink1;
+package com.example.rethink1.stock_ordering;
 
 import com.example.rethink1.stock_ordering.SupplierAPI;
 import com.example.rethink1.stock_prediction.Product;

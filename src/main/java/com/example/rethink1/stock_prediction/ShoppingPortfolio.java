@@ -1,6 +1,6 @@
 package com.example.rethink1.stock_prediction;
 
-import com.example.rethink1.VirtualBasket;
+import com.example.rethink1.stock_ordering.VirtualBasket;
 
 import java.util.ArrayList;
 
