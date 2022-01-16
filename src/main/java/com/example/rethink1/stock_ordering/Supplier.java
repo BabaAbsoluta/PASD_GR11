@@ -2,23 +2,46 @@ package com.example.rethink1.stock_ordering;
 
 import com.example.rethink1.stock_ordering.SupplierAPI;
 import com.example.rethink1.stock_prediction.Product;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.HashMap;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.util.ArrayList;
+import java.util.List;
 
+@Getter
+@Setter
+@Entity
 public class Supplier {
+
+    @Id
     protected int supplierUID;
-    protected HashMap<Product, Integer> inventorySupplier;
-    protected SupplierAPI supplierAPI;
+    protected List<Product> inventorySupplier;
+    //protected SupplierAPI supplierAPI;
+
+    /**
+     * Empty constructor for the database.
+     */
+    public Supplier() {
+    }
 
     public Supplier(int supplierUID) {
         this.supplierUID = supplierUID;
-        this.inventorySupplier = new HashMap<>();
-        this.supplierAPI = SupplierAPI.getInstance();;
+        this.inventorySupplier = new ArrayList<>();
+        //this.supplierAPI = SupplierAPI.getInstance();;
     }
 
-    public void getInventorySupplier(){
-
+    public void createList(){
+        //List = From the supplierAPI getProducts
     }
 
 
+    @Override
+    public String toString() {
+        return "Supplier{" +
+                "supplierUID=" + supplierUID +
+                ", inventorySupplier=" + inventorySupplier +
+                '}';
+    }
 }

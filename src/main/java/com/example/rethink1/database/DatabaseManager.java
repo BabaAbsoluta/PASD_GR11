@@ -1,6 +1,8 @@
 package com.example.rethink1.database;
 
+import com.example.rethink1.stock_ordering.Supplier;
 import com.example.rethink1.stock_prediction.Product;
+import com.example.rethink1.stock_prediction.ShoppingPortfolio;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -22,8 +24,10 @@ public class DatabaseManager {
     /*SIDENOTE: Those errors do not go away, the compiler does not complain!!*/
     public static final String SELECT_ALL_PRODUCTS = "SELECT p FROM Product p";
     public static final String SELECT_PRODUCT_WITH_UID = "SELECT p FROM Product p WHERE p.productUID='";
-    public static final String DELETE_PRODUCT_WITH_UID = "DELETE p FROM Product p WHERE p.productUID='";
     public static final String END_STRING = "'";
+    private static final String SELECT_ALL_SUPPLIERS = "SELECT s FROM Supplier s";
+    private static final String SELECT_ALL_SHOPPINGPORTFOLIOS = "SELECT s FROM ShoppingPortfolio s";
+    private static final String SELECT_SHOPPINGPORT_WITH_CUID = "SELECT s FROM ShoppingPortfolio s WHERE s.customerUID='";
 
     private EntityManagerFactory managerFactory;
     private EntityManager manager;
@@ -94,6 +98,17 @@ public class DatabaseManager {
         }
     }
 
+    public void addPortfolioToDataBase(ShoppingPortfolio shoppingPortfolio){
+        var query = manager.createQuery(SELECT_SHOPPINGPORT_WITH_CUID + shoppingPortfolio.getCustomerUID() + END_STRING, ShoppingPortfolio.class);
+        try {
+            query.getSingleResult();
+            updatePortfolio(shoppingPortfolio);
+        }
+        catch(Exception e){
+            addShoppingPortfolio(shoppingPortfolio);
+        }
+    }
+
     /**
      * The product's object is added to the database.
      *
@@ -104,6 +119,20 @@ public class DatabaseManager {
         manager.persist(product);
         manager.getTransaction().commit();
     }
+
+    public void addSupplier(Supplier supplier){
+        manager.getTransaction().begin();
+        manager.persist(supplier);
+        manager.getTransaction().commit();
+    }
+
+    public void addShoppingPortfolio(ShoppingPortfolio shoppingPortfolio){
+        manager.getTransaction().begin();
+        manager.persist(shoppingPortfolio);
+        manager.getTransaction().commit();
+    }
+
+
 
 //    /**
 //     * We create a query of the player's data that is already in the database.
@@ -122,6 +151,15 @@ public class DatabaseManager {
 //        manager.getTransaction().commit();
 //    }
 
+    public void updatePortfolio(ShoppingPortfolio shoppingPortfolio){
+        var query = manager.createQuery(SELECT_PRODUCT_WITH_UID + shoppingPortfolio.getCustomerUID() + END_STRING, ShoppingPortfolio.class);
+        manager.getTransaction().begin();
+        ShoppingPortfolio matchedPortfolio = query.getSingleResult();
+//        idk if you can replace an array with an array, or will you get double values
+//        matchedPortfolio.setPurchaseHistory(shoppingPortfolio.getPurchaseHistory());
+        manager.getTransaction().commit();
+    }
+
     /**
      * TODO: create delete functions
      */
@@ -130,6 +168,28 @@ public class DatabaseManager {
             Product product = manager.find(Product.class, productUID);
             manager.getTransaction().begin();
             manager.remove(product);
+            manager.getTransaction().commit();
+        }catch(Exception e){
+            System.out.println("Product is no longer in the inventory");
+        }
+    }
+
+    public void removeSupplier(int supplierUID){
+        try {
+            Supplier supplier = manager.find(Supplier.class, supplierUID);
+            manager.getTransaction().begin();
+            manager.remove(supplier);
+            manager.getTransaction().commit();
+        }catch(Exception e){
+            System.out.println("Product is no longer in the inventory");
+        }
+    }
+
+    public void removeShoppingPortfolio(String customerUID){
+        try {
+            ShoppingPortfolio shoppingPortfolio = manager.find(ShoppingPortfolio.class, customerUID);
+            manager.getTransaction().begin();
+            manager.remove(shoppingPortfolio);
             manager.getTransaction().commit();
         }catch(Exception e){
             System.out.println("Product is no longer in the inventory");
@@ -146,6 +206,17 @@ public class DatabaseManager {
         var query = manager.createQuery(SELECT_ALL_PRODUCTS, Product.class);
         return  query.getResultList();
     }
+
+    public List<Supplier> getAllSuppliers(){
+        var query = manager.createQuery(SELECT_ALL_SUPPLIERS, Supplier.class);
+        return  query.getResultList();
+    }
+
+    public List<ShoppingPortfolio> getAllShoppingPortfolios(){
+        var query = manager.createQuery(SELECT_ALL_SHOPPINGPORTFOLIOS, ShoppingPortfolio.class);
+        return  query.getResultList();
+    }
+
 
 
 }
