@@ -32,4 +32,11 @@ public class ShoppingPortfolio {
         purchaseHistory.add(basket);
     }
 
+    @Override
+    public String toString() {
+        return "ShoppingPortfolio{" +
+                "customerUID='" + customerUID + '\'' +
+                ", purchaseHistory=" + purchaseHistory +
+                '}';
+    }
 }
