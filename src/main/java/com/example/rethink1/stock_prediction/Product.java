@@ -17,15 +17,15 @@ import java.io.Serializable;
 public class Product implements Serializable {
 
     @Id
-    protected String productUID;
+    protected int product_id;
     protected String name;
-    protected int quantity;
+    protected int nr_of_products;
     @ManyToOne
     @JoinColumn(name = "supplier_supplier_uid")
     protected Supplier supplier;
-    protected double priceCents;
-    protected long ean13;
-    protected double vatRate;
+    protected int price_in_cents;
+    protected String EAN_13;
+    protected double vat_rate;
 
     public Product() {
 
@@ -36,34 +36,23 @@ public class Product implements Serializable {
     }
 
 
-    public Product(String name, int quantity, String productUID, Supplier supplier, double priceCents, long ean13, double vatRate) {
+    public Product(String name, int quantity, int product_id, Supplier supplier, int priceCents, String ean13, double vatRate) {
         this.name = name;
-        this.quantity = quantity;
-        this.productUID = productUID;
+        this.nr_of_products = quantity;
+        this.product_id = product_id;
         this.supplier = supplier;
-        this.priceCents = priceCents;
-        this.ean13 = ean13;
-        this.vatRate = vatRate;
+        this.price_in_cents = priceCents;
+        this.EAN_13 = ean13;
+        this.vat_rate = vatRate;
     }
 
     public void remove() {
-        --this.quantity;
+        --this.nr_of_products;
     }
 
     public void add(){
-        ++this.quantity;
+        ++this.nr_of_products;
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "productUID='" + productUID + '\'' +
-                ", name='" + name + '\'' +
-                ", quantity=" + quantity +
-                ", supplier=" + supplier +
-                ", priceCents=" + priceCents +
-                ", ean13=" + ean13 +
-                ", vatRate=" + vatRate +
-                '}';
-    }
+
 }
