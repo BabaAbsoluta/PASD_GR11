@@ -32,9 +32,15 @@ public class InventorySpace implements Serializable {
 
 
     public InventorySpace(int numberProducts) {
-        this.products = new ArrayList<Product>();
+        this.products = new ArrayList<>();
         this.numberProducts = numberProducts;
     }
+
+    public InventorySpace(List<Product> products, int numberProducts) {
+        this.products = products;
+        this.numberProducts = numberProducts;
+    }
+
 
     /** Removes a product from the inventory space. Done when a customer buys a product
      * @param product Product being bought by the customer
@@ -48,9 +54,9 @@ public class InventorySpace implements Serializable {
             --inventorySpace.numberProducts;
 
             for (Product p : inventorySpace.products) {
-                if(p.getProductUID().equals(product.getProductUID())) {
+                if(p.getProduct_id() == product.getProduct_id()) {
                     // if there are more than one quantity of the product
-                    if(p.getQuantity() > 1){
+                    if(p.getNr_of_products() > 1){
                         // minus the quantity
                         p.remove();
                     }
@@ -73,7 +79,7 @@ public class InventorySpace implements Serializable {
         dbm.removeInventory(inventorySpace.getInventoryUID());
         for (Product p : inventorySpace.products) {
             // check if product exists in inventory, if it does then increment quantity
-            if (p.getProductUID().equals(product.getProductUID())) {
+            if (p.getProduct_id() == product.getProduct_id()) {
                 p.add();
                 return;
             }
@@ -86,13 +92,16 @@ public class InventorySpace implements Serializable {
     /**
      * Shows the contents of the inventory
      */
-    public void show(DatabaseManager dbm) {
+    public void show() {
+
+        DatabaseManager dbm = DatabaseManager.getInstance();
         InventorySpace inventorySpace = dbm.getInfoInventory().get(0);
+        System.out.println("InventoryUID: " + inventorySpace.getInventoryUID());
         for (Product p: inventorySpace.getProducts()) {
             System.out.println(p.toString());
         }
-
-
+        System.out.println("Number of products: " + inventorySpace.getNumberProducts());
+        
     }
 
     public Product findProduct(String name) {

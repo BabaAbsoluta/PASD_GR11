@@ -2,14 +2,31 @@ package com.example.rethink1.stock_ordering;
 
 import lombok.Getter;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 @Getter
+@Entity
 public class SupplierProducts {
+
+    @Id
+    @Column(name = "uid", nullable = false)
+    private Long uid;
 
     protected int id;
     protected String name;
     protected String EAN_13;
     protected double vat_rate;
     protected int price_in_cents;
+
+    public SupplierProducts() {
+
+    }
+
+    public void setUid(Long uid) {
+        this.uid = uid;
+    }
 
     public SupplierProducts(int id, String name, String EAN_13, double vat_rate, int price_in_cents) {
         this.id = id;

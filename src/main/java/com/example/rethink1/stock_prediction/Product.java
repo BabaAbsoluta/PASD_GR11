@@ -20,7 +20,7 @@ public class Product implements Serializable {
     protected int product_id;
     protected String name;
     protected int nr_of_products;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "supplier_supplier_uid")
     protected Supplier supplier;
     protected int price_in_cents;
@@ -55,4 +55,16 @@ public class Product implements Serializable {
     }
 
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "product_id=" + product_id +
+                ", name='" + name + '\'' +
+                ", nr_of_products=" + nr_of_products +
+                ", supplier=" + supplier +
+                ", price_in_cents=" + price_in_cents +
+                ", EAN_13='" + EAN_13 + '\'' +
+                ", vat_rate=" + vat_rate +
+                '}';
+    }
 }

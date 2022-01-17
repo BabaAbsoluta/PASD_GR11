@@ -24,7 +24,6 @@ public class OrderLine {
         this.order_id = order_id;
         this.nr_of_products = nr_of_products;
         this.orderLine_id = orderLine_id;
-
     }
 
     @Override
