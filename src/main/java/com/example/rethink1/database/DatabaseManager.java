@@ -58,7 +58,7 @@ public class DatabaseManager {
      *
      * @param dbName The file name, where the database should be stored.
      */
-    private DatabaseManager(String dbName) {
+    public DatabaseManager(String dbName) {
         initDatabase(dbName);
     }
 
@@ -67,7 +67,7 @@ public class DatabaseManager {
      *
      * @param name file name, where the database should be stored.
      */
-    private void initDatabase(String name){
+    public void initDatabase(String name){
         try{
             Path dbPath = Path.of("db", name + ".odb");
             managerFactory = Persistence.createEntityManagerFactory(dbPath.toString());

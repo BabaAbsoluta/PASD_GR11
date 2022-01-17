@@ -1,9 +1,11 @@
 package com.example.rethink1;
 
+import com.example.rethink1.database.DatabaseManager;
 import com.example.rethink1.stock_ordering.VirtualBasket;
 import com.example.rethink1.stock_prediction.InventorySpace;
 import com.example.rethink1.stock_prediction.Manager;
 import com.example.rethink1.stock_prediction.Product;
+import com.example.rethink1.stock_prediction.ShoppingPortfolio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -12,6 +14,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 @SpringBootApplication
@@ -20,6 +23,7 @@ public class Rethink1Application implements CommandLineRunner {
     @Autowired
     private ConfigurableApplicationContext context;
     private static SpringApplication springApplication;
+    private DatabaseManager dbm;
 
     public static void main(String[] args) {
         springApplication.run(Rethink1Application.class, args);
@@ -28,7 +32,8 @@ public class Rethink1Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        InventorySpace inventorySpace = new InventorySpace(0); // #TODO: get from database
+        dbm = new DatabaseManager("RethinkODB");
+        InventorySpace inventorySpace = dbm.getInfoInventory().get(0);
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter: \n" +
                 "(1) To check inventory\n" +
@@ -40,7 +45,7 @@ public class Rethink1Application implements CommandLineRunner {
 
         switch (choice) {
             case 1:
-                inventorySpace.show();
+                inventorySpace.show(dbm);
                 System.out.println("Works");
                 break;
             case 2:
@@ -58,11 +63,16 @@ public class Rethink1Application implements CommandLineRunner {
         }
     }
 
+
+    /** Adds a customers virtual basket to their shopping portfolio and updates the database
+     * TODO: Move this to the event listener (not in the correct place)
+     * @param inventorySpace the inventory space of the store
+     */
     public void addVirtualBasket(InventorySpace inventorySpace) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter customer UID");
         String uid = sc.nextLine();
-        // TODO: get corresponding purchase history for product and add a virtual basket
+
         System.out.println("Enter number of products");
         int num = sc.nextInt();
         System.out.println("Enter payment method");
@@ -76,14 +86,25 @@ public class Rethink1Application implements CommandLineRunner {
             int quantity = sc.nextInt();
             Product p = inventorySpace.findProduct(name);
 
+
             if (p == null) {
                 System.out.println("Not a valid product");
             } else {
+                p.setQuantity(quantity + p.getQuantity());
                 products.add(p);
             }
         }
         LocalDate date = LocalDate.now();
         VirtualBasket basket = new VirtualBasket(products, payment, date);
+        List<ShoppingPortfolio> shoppingPortfolioList = dbm.getAllShoppingPortfolios();
+
+        for (ShoppingPortfolio s: shoppingPortfolioList) {
+            if (s.getCustomerUID().equals(uid)) {
+                s.addPurchase(basket);
+                dbm.removeShoppingPortfolio(uid);
+                dbm.addShoppingPortfolio(s);
+            }
+        }
 
     }
 
