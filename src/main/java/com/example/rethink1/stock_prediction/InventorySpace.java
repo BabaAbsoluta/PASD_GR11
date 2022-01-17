@@ -1,18 +1,35 @@
 package com.example.rethink1.stock_prediction;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.ArrayList;
 
 /**
  * Class describes an Inventory space for the supermarket
  * Each Inventory object has products and number of products in the inventory.
  */
+@Getter
+@Setter
+@Entity
 public class InventorySpace {
+
+    @Id
+    protected int inventoryUID;
     protected ArrayList<Product> products;
     protected int numberProducts;
 
-    public InventorySpace() {
+    /**
+     * Empty constructor for the database.
+     */
+    public InventorySpace(){}
+
+
+    public InventorySpace(int numberProducts) {
         this.products = new ArrayList<>();
-        this.numberProducts = 0;
+        this.numberProducts = numberProducts;
     }
 
     /** Removes a product from the inventory space. Done when a customer buys a product
@@ -73,4 +90,15 @@ public class InventorySpace {
         return null;
     }
 
+    /**
+     * @return String representation of the object InventorySpace
+     */
+    @Override
+    public String toString() {
+        return "InventorySpace{" +
+                "inventoryUID=" + inventoryUID +
+                ", products=" + products +
+                ", numberProducts=" + numberProducts +
+                '}';
+    }
 }

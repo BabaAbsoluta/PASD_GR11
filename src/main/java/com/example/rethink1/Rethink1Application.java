@@ -28,7 +28,7 @@ public class Rethink1Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        InventorySpace inventorySpace = new InventorySpace(); // #TODO: get from database
+        InventorySpace inventorySpace = new InventorySpace(0); // #TODO: get from database
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter: \n" +
                 "(1) To check inventory\n" +

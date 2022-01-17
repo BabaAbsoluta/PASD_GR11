@@ -18,7 +18,7 @@ public class Supplier {
     @Id
     protected int supplierUID;
     protected List<Product> inventorySupplier;
-    //protected SupplierAPI supplierAPI;
+    transient SupplierAPI supplierAPI;
 
     /**
      * Empty constructor for the database.
@@ -29,7 +29,7 @@ public class Supplier {
     public Supplier(int supplierUID) {
         this.supplierUID = supplierUID;
         this.inventorySupplier = new ArrayList<>();
-        //this.supplierAPI = SupplierAPI.getInstance();;
+        this.supplierAPI = SupplierAPI.getInstance();;
     }
 
     public void createList(){

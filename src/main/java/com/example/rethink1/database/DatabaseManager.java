@@ -1,6 +1,8 @@
 package com.example.rethink1.database;
 
 import com.example.rethink1.stock_ordering.Supplier;
+import com.example.rethink1.stock_prediction.InventorySpace;
+import com.example.rethink1.stock_prediction.Manager;
 import com.example.rethink1.stock_prediction.Product;
 import com.example.rethink1.stock_prediction.ShoppingPortfolio;
 
@@ -22,12 +24,17 @@ import java.util.List;
 public class DatabaseManager {
 
     /*SIDENOTE: Those errors do not go away, the compiler does not complain!!*/
-    public static final String SELECT_ALL_PRODUCTS = "SELECT p FROM Product p";
-    public static final String SELECT_PRODUCT_WITH_UID = "SELECT p FROM Product p WHERE p.productUID='";
     public static final String END_STRING = "'";
+
+    /*SQL for the list and info of the objects in the database*/
     private static final String SELECT_ALL_SUPPLIERS = "SELECT s FROM Supplier s";
     private static final String SELECT_ALL_SHOPPINGPORTFOLIOS = "SELECT s FROM ShoppingPortfolio s";
+    private static final String SELECT_ALL_INVENTORY = "SELECT i FROM InventorySpace s";
+    private static final String SELECT_MANAGER = "SELECT m FROM Manager m";
+
+    /*SQL for the update methods*/
     private static final String SELECT_SHOPPINGPORT_WITH_CUID = "SELECT s FROM ShoppingPortfolio s WHERE s.customerUID='";
+    private static final String SELECT_INVENTORY_WITH_UID = "SELECT i FROM InventorySpace i WHERE i.inventoryUID='";
 
     private EntityManagerFactory managerFactory;
     private EntityManager manager;
@@ -81,23 +88,13 @@ public class DatabaseManager {
         managerFactory.close();
     }
 
-    /**
-     * We check if the UID of the product already exists in the database by creating a query with the product's UID.
-     * If the product does exists we update the database with the product's object, otherwise we added to the database.
-     *
-     * @param product The player that has played the game.
-     */
-    public void addProductToDataBase(Product product){
-        var query = manager.createQuery(SELECT_PRODUCT_WITH_UID + product.getProductUID() + END_STRING, Product.class);
-        try {
-            query.getSingleResult();
-//            updateProduct(product);
-        }
-        catch(Exception e){
-            addProduct(product);
-        }
-    }
 
+    /**
+     * We check if the UID of the shopping portfolio already exists in the database by creating a query with the shopping portfolio's UID.
+     * If the shopping portfolio does exists we update the database with the shopping portfolio's object, otherwise we added to the database.
+     *
+     * @param shoppingPortfolio The shopping portfolio of the customer.
+     */
     public void addPortfolioToDataBase(ShoppingPortfolio shoppingPortfolio){
         var query = manager.createQuery(SELECT_SHOPPINGPORT_WITH_CUID + shoppingPortfolio.getCustomerUID() + END_STRING, ShoppingPortfolio.class);
         try {
@@ -110,13 +107,13 @@ public class DatabaseManager {
     }
 
     /**
-     * The product's object is added to the database.
+     * The inventory's object is added to the database.
      *
-     * @param product The product that is in store.
+     * @param inventorySpace The inventory of the store.
      */
-    public void addProduct(Product product){
+    public void addInventory(InventorySpace inventorySpace){
         manager.getTransaction().begin();
-        manager.persist(product);
+        manager.persist(inventorySpace);
         manager.getTransaction().commit();
     }
 
@@ -132,27 +129,16 @@ public class DatabaseManager {
         manager.getTransaction().commit();
     }
 
+    public void addManager(Manager supermarketManager){
+        manager.getTransaction().begin();
+        manager.persist(supermarketManager);
+        manager.getTransaction().commit();
+    }
 
 
-//    /**
-//     * We create a query of the player's data that is already in the database.
-//     * We check if the score of the player is higher than the score that the player already has in the database.
-//     * If so we update the score of the player, otherwise not.
-//     *
-//     * @param player The player that has played the game.
-//     */
-//    public void updatePlayer(Product product){
-//        var query = manager.createQuery(SELECT_PRODUCT_WITH_UID + product.getProductUID() + END_STRING, Product.class);
-//        manager.getTransaction().begin();
-//        Product matchedProduct = query.getSingleResult();
-//        if(matchedProduct.getScore() <= player.getScore()) {
-//            matchedPlayer.setScore(player.getScore());
-//        }
-//        manager.getTransaction().commit();
-//    }
 
     public void updatePortfolio(ShoppingPortfolio shoppingPortfolio){
-        var query = manager.createQuery(SELECT_PRODUCT_WITH_UID + shoppingPortfolio.getCustomerUID() + END_STRING, ShoppingPortfolio.class);
+        var query = manager.createQuery(SELECT_SHOPPINGPORT_WITH_CUID + shoppingPortfolio.getCustomerUID() + END_STRING, ShoppingPortfolio.class);
         manager.getTransaction().begin();
         ShoppingPortfolio matchedPortfolio = query.getSingleResult();
 //        idk if you can replace an array with an array, or will you get double values
@@ -160,17 +146,26 @@ public class DatabaseManager {
         manager.getTransaction().commit();
     }
 
-    /**
-     * TODO: create delete functions
-     */
-    public void removeProduct(String productUID){
+    public void updateInventory(InventorySpace inventorySpace){
+        var query = manager.createQuery(SELECT_INVENTORY_WITH_UID + inventorySpace.getInventoryUID() + END_STRING, InventorySpace.class);
+        manager.getTransaction().begin();
+        InventorySpace matchedInventory = query.getSingleResult();
+//        idk if you can replace an array with an array, or will you get double values
+//        matchedInventory.setProducts(inventorySpace.getProducts());
+//        matchedInventory.setNumberProducts(inventorySpace.getNumberProducts());
+        manager.getTransaction().commit();
+    }
+
+
+    public void removeInventory(int inventoryUID){
         try {
-            Product product = manager.find(Product.class, productUID);
+            InventorySpace inventorySpace = manager.find(InventorySpace.class, inventoryUID);
             manager.getTransaction().begin();
-            manager.remove(product);
+            manager.remove(inventorySpace);
             manager.getTransaction().commit();
+            System.out.println("Inventory is removed");
         }catch(Exception e){
-            System.out.println("Product is no longer in the inventory");
+            System.out.println("Inventory is removed");
         }
     }
 
@@ -180,8 +175,9 @@ public class DatabaseManager {
             manager.getTransaction().begin();
             manager.remove(supplier);
             manager.getTransaction().commit();
+            System.out.println("Supplier is removed");
         }catch(Exception e){
-            System.out.println("Product is no longer in the inventory");
+            System.out.println("Supplier is removed");
         }
     }
 
@@ -191,8 +187,21 @@ public class DatabaseManager {
             manager.getTransaction().begin();
             manager.remove(shoppingPortfolio);
             manager.getTransaction().commit();
+            System.out.println("Shopping portfolio is removed");
         }catch(Exception e){
-            System.out.println("Product is no longer in the inventory");
+            System.out.println("Shopping portfolio is removed");
+        }
+    }
+
+    public void removeManager(long employeeUID){
+        try {
+            Manager supermarketManager = manager.find(Manager.class, employeeUID);
+            manager.getTransaction().begin();
+            manager.remove(supermarketManager);
+            manager.getTransaction().commit();
+            System.out.println("Manager is removed");
+        }catch(Exception e){
+            System.out.println("Manager is removed");
         }
     }
 
@@ -200,20 +209,40 @@ public class DatabaseManager {
     /**
      * Creates a query of all the data and returns a list with getResultList.
      *
-     * @return A list of all the players and their highScore.
+     * @return The information of the inventory.
      */
-    public List<Product> getAllProducts(){
-        var query = manager.createQuery(SELECT_ALL_PRODUCTS, Product.class);
+    public List<InventorySpace> getInfoInventory(){
+        var query = manager.createQuery(SELECT_ALL_INVENTORY, InventorySpace.class);
         return  query.getResultList();
     }
 
+    /**
+     * Creates a query of all the data and returns a list with getResultList.
+     *
+     * @return A list of all the suppliers.
+     */
     public List<Supplier> getAllSuppliers(){
         var query = manager.createQuery(SELECT_ALL_SUPPLIERS, Supplier.class);
         return  query.getResultList();
     }
 
+    /**
+     * Creates a query of all the data and returns a list with getResultList.
+     *
+     * @return A list of all the shopping portfolio of the registered customers.
+     */
     public List<ShoppingPortfolio> getAllShoppingPortfolios(){
         var query = manager.createQuery(SELECT_ALL_SHOPPINGPORTFOLIOS, ShoppingPortfolio.class);
+        return  query.getResultList();
+    }
+
+    /**
+     * Creates a query of all the data and returns a list with getResultList.
+     *
+     * @return The information of the manager.
+     */
+    public List<Manager> getInfoManager(){
+        var query = manager.createQuery(SELECT_MANAGER, Manager.class);
         return  query.getResultList();
     }
 

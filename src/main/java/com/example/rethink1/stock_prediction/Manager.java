@@ -1,6 +1,8 @@
 package com.example.rethink1.stock_prediction;
 
 import com.example.rethink1.stock_ordering.OrderLine;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,8 +10,11 @@ import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Scanner;
 
+@Setter
 @Entity
+@Getter
 public class Manager implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue
@@ -22,16 +27,10 @@ public class Manager implements Serializable {
         this.locationOfStore = locationOfStore;
     }
 
+    /**
+     * Empty constructor for the database.
+     */
     public Manager() {
-
-    }
-
-    public long getEmployeeUID() {
-        return employeeUID;
-    }
-
-    public String getLocationOfStore() {
-        return locationOfStore;
     }
 
     @Override
