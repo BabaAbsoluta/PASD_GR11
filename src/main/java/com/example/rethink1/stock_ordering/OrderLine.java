@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class OrderLine {
 
-    //public int orderLineID;
+    public int orderLine_id;
     public int product_id;
     public int order_id;
     public int nr_of_products;
@@ -17,14 +17,21 @@ public class OrderLine {
         this.product_id = product_id;
         this.order_id = order_id;
         this.nr_of_products = nr_of_products;
-        //this.orderLineID = orderLineID;
+
+    }
+    public OrderLine(int product_id, int order_id, int nr_of_products, int orderLine_id) {
+        this.product_id = product_id;
+        this.order_id = order_id;
+        this.nr_of_products = nr_of_products;
+        this.orderLine_id = orderLine_id;
 
     }
 
     @Override
     public String toString() {
         return "OrderLine{" +
-                "product_id=" + product_id +
+                "orderLine_id=" + orderLine_id +
+                ", product_id=" + product_id +
                 ", order_id=" + order_id +
                 ", nr_of_products=" + nr_of_products +
                 '}';

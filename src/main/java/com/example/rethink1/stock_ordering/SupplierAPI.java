@@ -13,14 +13,24 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-@Getter
+/**
+ * TODO: Replace the print statements of the exceptions
+ */
+
 public class SupplierAPI {
 
     HttpClient client;
     private ObjectMapper objectMapper;
+    @Getter
     protected List<SupplierProducts> supplierProductsList;
+    @Getter
+    protected List<Order> supplierOrderList;
+    @Getter
+    protected List<Delivery> supplierDeliveryList;
+    private List<OrderLine> orderLineList;
 
     private static final String SUPPLIER_API_URL = "https://rethink-supplier.herokuapp.com/user/";
     private static final String SUPPLIER_API_PRODUCT_URL = "https://rethink-supplier.herokuapp.com/product/";
@@ -38,10 +48,13 @@ public class SupplierAPI {
         return instance;
     }
 
-    public SupplierAPI() {
+    private SupplierAPI() {
         this.client = HttpClient.newHttpClient();
         this.objectMapper = new ObjectMapper();
         this.supplierProductsList = new ArrayList<>();
+        this.supplierOrderList = new ArrayList<>();
+        this.supplierDeliveryList = new ArrayList<>();
+        this.orderLineList = new ArrayList<>();
         createConnection();
         getAllProductsAPI();
     }
@@ -128,11 +141,68 @@ public class SupplierAPI {
         try {
             HttpResponse<String> response = client.send(requestGetOrder, HttpResponse.BodyHandlers.ofString());
             System.out.println("Get all orders:");
-            System.out.println(response.body());
-        } catch (IOException | InterruptedException e) {
+            parseAllOrders(response.body());
+        } catch (IOException | InterruptedException | JSONException e) {
             e.printStackTrace();
         }
     }
+
+    private void parseAllOrders(String responseBody) throws JSONException {
+        supplierOrderList.clear();
+        JSONArray orders = new JSONArray(responseBody);
+        for (int i = 0; i < orders.length(); i++) {
+            JSONObject order = orders.getJSONObject(i);
+            int id = order.getInt("id");
+            int buyer = order.getInt("buyer");
+            boolean is_processed = order.getBoolean("is_processed");
+
+            Order newOrder = new Order(id, buyer, is_processed);
+            supplierOrderList.add(i, newOrder);
+        }
+        System.out.println(supplierOrderList);
+    }
+
+    public List<OrderLine> getOrderDetails(int order_id){
+        Integer int_id = new Integer(order_id);
+        String id = int_id.toString();
+
+        HttpRequest requestGetOrder = HttpRequest.newBuilder()
+                .GET()
+                .header("Authorization", "Token ce0058bb4ad8047d7b0d87bc44843e4d35da5695")
+                .uri(URI.create(SUPPLIER_API_ORDER_URL+id))
+                .build();
+
+        try {
+            HttpResponse<String> response = client.send(requestGetOrder, HttpResponse.BodyHandlers.ofString());
+            System.out.println("Get order_id: " + order_id);
+            return parseOrder(response.body());
+        } catch (IOException | InterruptedException | JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private List<OrderLine> parseOrder(String responseBody) throws JSONException {
+        orderLineList.clear();
+        JSONObject order = new JSONObject(responseBody);
+        System.out.println(order);
+        JSONArray orderLinesArray = order.getJSONArray("orderlines");
+        System.out.println(orderLinesArray);
+        System.out.println(orderLinesArray.length());
+        for (int i = 0; i < orderLinesArray.length(); i++) {
+            JSONObject orderLines = orderLinesArray.getJSONObject(i);
+            int product_id = orderLines.getInt("product");
+            int orderLine_id = orderLines.getInt("id");
+            int nr_of_product = orderLines.getInt("nr_of_products");
+            int order_id = orderLines.getInt("order");
+
+            OrderLine newOrderLine = new OrderLine(product_id, order_id, nr_of_product, orderLine_id);
+            orderLineList.add(i, newOrderLine);
+        }
+        return orderLineList;
+    }
+
+
 
     public void addOrderLineAPI(OrderLine orderLine) throws IOException, InterruptedException {
 
@@ -173,7 +243,7 @@ public class SupplierAPI {
 
     }
 
-    public void viewDeliveriesAPI(){
+    public void viewDeliveryList(){
         HttpRequest requestGetDelivery = HttpRequest.newBuilder()
                 .GET()
                 .header("Authorization", "Token ce0058bb4ad8047d7b0d87bc44843e4d35da5695")
@@ -183,9 +253,24 @@ public class SupplierAPI {
         try {
             HttpResponse<String> response = client.send(requestGetDelivery, HttpResponse.BodyHandlers.ofString());
             System.out.println("Get all deliveries:");
-            System.out.println(response.body());
-        } catch (IOException | InterruptedException e) {
+            parseDelivery(response.body());
+        } catch (IOException | InterruptedException | JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void parseDelivery(String responseBody) throws JSONException {
+        supplierDeliveryList.clear();
+        JSONArray deliveries = new JSONArray(responseBody);
+        for (int i = 0; i < deliveries.length(); i++) {
+            JSONObject order = deliveries.getJSONObject(i);
+            int delivery_id = order.getInt("id");
+            String date_time = order.getString("date_time");
+            int order_id = order.getInt("order");
+
+            Delivery newDelivery = new Delivery(delivery_id, date_time, order_id);
+            supplierDeliveryList.add(i, newDelivery);
+        }
+        System.out.println(supplierDeliveryList);
     }
 }

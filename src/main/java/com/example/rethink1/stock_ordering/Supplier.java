@@ -8,14 +8,17 @@ import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
 @Setter
 @Entity
 public class Supplier {
 
     @Id
+    @Getter
     protected int supplierUID;
+
     protected List<SupplierProducts> supplierList;
+    protected List<Order> supplierOrderList;
+    protected List<Delivery> supplierDeliveryList;
     transient SupplierAPI supplierAPI;
 
     /**
@@ -27,12 +30,28 @@ public class Supplier {
     public Supplier(int supplierUID) {
         this.supplierUID = supplierUID;
         this.supplierList = new ArrayList<>();
+        this.supplierOrderList = new ArrayList<>();
+        this.supplierDeliveryList = new ArrayList<>();
         this.supplierAPI = SupplierAPI.getInstance();
         getInventorySupplier();
+        getSupplierOrderList();
+        getDeliveryList();
     }
 
     public void getInventorySupplier(){
         supplierList = supplierAPI.getSupplierProductsList();
+    }
+
+    public void getSupplierOrderList(){
+        supplierOrderList.clear();
+        supplierAPI.getALLOrdersAPI();
+        supplierOrderList = supplierAPI.getSupplierOrderList();
+    }
+
+    public void getDeliveryList(){
+        supplierDeliveryList.clear();
+        supplierAPI.viewDeliveryList();
+        supplierDeliveryList = supplierAPI.getSupplierDeliveryList();
     }
 
 
@@ -41,6 +60,7 @@ public class Supplier {
         return "Supplier{" +
                 "supplierUID=" + supplierUID +
                 ", supplierList=" + supplierList +
+                ", supplierOrderList=" + supplierOrderList +
                 '}';
     }
 }

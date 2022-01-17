@@ -21,7 +21,7 @@ public class SupplierProducts {
 
     @Override
     public String toString() {
-        return "SupplierProducts{" +
+        return "Product{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", EAN_13='" + EAN_13 + '\'' +
