@@ -29,7 +29,7 @@ public class DatabaseManager {
     /*SQL for the list and info of the objects in the database*/
     private static final String SELECT_ALL_SUPPLIERS = "SELECT s FROM Supplier s";
     private static final String SELECT_ALL_SHOPPINGPORTFOLIOS = "SELECT s FROM ShoppingPortfolio s";
-    private static final String SELECT_ALL_INVENTORY = "SELECT i FROM InventorySpace s";
+    private static final String SELECT_ALL_INVENTORY = "SELECT s FROM InventorySpace s";
     private static final String SELECT_MANAGER = "SELECT m FROM Manager m";
 
     /*SQL for the update methods*/

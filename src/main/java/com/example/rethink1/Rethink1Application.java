@@ -1,6 +1,8 @@
 package com.example.rethink1;
 
 import com.example.rethink1.database.DatabaseManager;
+import com.example.rethink1.events.Event;
+import com.example.rethink1.stock_ordering.Supplier;
 import com.example.rethink1.stock_ordering.VirtualBasket;
 import com.example.rethink1.stock_prediction.InventorySpace;
 import com.example.rethink1.stock_prediction.Manager;
@@ -14,6 +16,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -24,7 +27,7 @@ public class Rethink1Application implements CommandLineRunner {
     private ConfigurableApplicationContext context;
     private static SpringApplication springApplication;
     private DatabaseManager dbm;
-
+    private Event event;
     public static void main(String[] args) {
         springApplication.run(Rethink1Application.class, args);
     }
@@ -32,7 +35,15 @@ public class Rethink1Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        dbm = new DatabaseManager("RethinkODB");
+        dbm = DatabaseManager.getInstance();
+
+         Supplier supplier = new Supplier(2);
+         List<Product> products = Arrays.asList(new Product("Butter",10,3,supplier,239, "30176240107",
+                         0.09),
+                 new Product("Shower Gel",10,8,supplier,959, "668205008014", 0.21));
+         InventorySpace inventory = new InventorySpace(products, 2);
+         dbm.addInventory(inventory);
+
         InventorySpace inventorySpace = dbm.getInfoInventory().get(0);
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter: \n" +
@@ -45,8 +56,8 @@ public class Rethink1Application implements CommandLineRunner {
 
         switch (choice) {
             case 1:
-                inventorySpace.show(dbm);
-                System.out.println("Works");
+                inventorySpace.show();
+                System.out.println("Works1");
                 break;
             case 2:
                 addVirtualBasket(inventorySpace);
@@ -90,12 +101,13 @@ public class Rethink1Application implements CommandLineRunner {
             if (p == null) {
                 System.out.println("Not a valid product");
             } else {
-                p.setQuantity(quantity + p.getQuantity());
+                p.setNr_of_products(quantity + p.getNr_of_products());
                 products.add(p);
             }
         }
         LocalDate date = LocalDate.now();
         VirtualBasket basket = new VirtualBasket(products, payment, date);
+
         List<ShoppingPortfolio> shoppingPortfolioList = dbm.getAllShoppingPortfolios();
 
         for (ShoppingPortfolio s: shoppingPortfolioList) {
@@ -105,6 +117,9 @@ public class Rethink1Application implements CommandLineRunner {
                 dbm.addShoppingPortfolio(s);
             }
         }
+
+        //event triggered to update stock prediction and process payment
+        basket.getEventPublisher().publishEvent("newPurchaseEvent");
 
     }
 

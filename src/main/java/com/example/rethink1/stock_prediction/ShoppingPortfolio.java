@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,7 +16,7 @@ public class ShoppingPortfolio {
 
     @Id
     protected String customerUID;
-    protected ArrayList<VirtualBasket> purchaseHistory;
+    protected List<VirtualBasket> purchaseHistory;
 
     /**
      * Empty constructor for the database.
