@@ -32,7 +32,7 @@ public class InventorySpace implements Serializable {
 
 
     public InventorySpace(int numberProducts) {
-        this.products = new ArrayList<Product>();
+        this.products = new ArrayList<>();
         this.numberProducts = numberProducts;
     }
 
@@ -93,6 +93,7 @@ public class InventorySpace implements Serializable {
      * Shows the contents of the inventory
      */
     public void show() {
+
         DatabaseManager dbm = DatabaseManager.getInstance();
         InventorySpace inventorySpace = dbm.getInfoInventory().get(0);
         System.out.println("InventoryUID: " + inventorySpace.getInventoryUID());
@@ -100,8 +101,7 @@ public class InventorySpace implements Serializable {
             System.out.println(p.toString());
         }
         System.out.println("Number of products: " + inventorySpace.getNumberProducts());
-
-
+        
     }
 
     public Product findProduct(String name) {

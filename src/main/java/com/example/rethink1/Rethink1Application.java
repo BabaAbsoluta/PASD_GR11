@@ -38,45 +38,56 @@ public class Rethink1Application implements CommandLineRunner {
         dbm = DatabaseManager.getInstance();
 
          Supplier supplier = new Supplier(2);
-         List<Product> products = Arrays.asList(new Product("Butter",10,3,supplier,239, "30176240107",
-                         0.09),
-                 new Product("Shower Gel",10,8,supplier,959, "668205008014", 0.21));
-         InventorySpace inventory = new InventorySpace(products, 2);
-         dbm.addInventory(inventory);
+         Product p1 = new Product("Butter",10,3,supplier,239, "30176240107",
+                 0.09);
+         Product p2 = new Product("Shower Gel",10,8,supplier,959, "668205008014", 0.21);
+
+        List<Product> products = new ArrayList<>();
+        products.add(p1);
+        products.add(p2);
+
+        InventorySpace inventory = new InventorySpace(products, 2);
+        dbm.addInventory(inventory);
 
         InventorySpace inventorySpace = dbm.getInfoInventory().get(0);
+
+        // kind of like the main screen
         Scanner sc = new Scanner(System.in);
-        System.out.println("Enter: \n" +
+        String message = "Enter: \n" +
                 "(1) To check inventory\n" +
                 "(2) To add customer transaction\n" +
                 "(3) To check incoming stock orders\n" +
-                "(4) Exit\n");
+                "(4) Exit\n";
+        System.out.println(message);
 
         int choice = sc.nextInt();
-
-        switch (choice) {
-            case 1:
-                inventorySpace.show();
-                System.out.println("Works1");
-                break;
-            case 2:
-                addVirtualBasket(inventorySpace);
-                break;
-            case 3:
-                checkStockOrder();
-                break;
-            case 4:
-                System.exit(springApplication.exit(context));
-                break;
-            default:
-                System.out.println("Enter a valid choice");
-                choice = sc.nextInt();
+        while (true) {
+            switch (choice) {
+                case 1:
+                    inventorySpace.show();
+                    System.out.println("Works1");
+                    System.out.println(message);
+                    break;
+                case 2:
+                    addVirtualBasket(inventorySpace);
+                    System.out.println(message);
+                    break;
+                case 3:
+                    checkStockOrder();
+                    System.out.println(message);
+                    break;
+                case 4:
+                    dbm.closeDataBase();
+                    System.exit(springApplication.exit(context));
+                    break;
+                default:
+                    System.out.println(message);
+            }
+            choice = sc.nextInt();
         }
     }
 
-
     /** Adds a customers virtual basket to their shopping portfolio and updates the database
-     * TODO: Move this to the event listener (not in the correct place)
      * @param inventorySpace the inventory space of the store
      */
     public void addVirtualBasket(InventorySpace inventorySpace) {
