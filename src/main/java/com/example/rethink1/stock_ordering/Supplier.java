@@ -1,7 +1,5 @@
 package com.example.rethink1.stock_ordering;
 
-import com.example.rethink1.stock_ordering.SupplierAPI;
-import com.example.rethink1.stock_prediction.Product;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +15,7 @@ public class Supplier {
 
     @Id
     protected int supplierUID;
-    protected List<Product> inventorySupplier;
+    protected List<SupplierProducts> supplierList;
     transient SupplierAPI supplierAPI;
 
     /**
@@ -28,12 +26,13 @@ public class Supplier {
 
     public Supplier(int supplierUID) {
         this.supplierUID = supplierUID;
-        this.inventorySupplier = new ArrayList<>();
-        this.supplierAPI = SupplierAPI.getInstance();;
+        this.supplierList = new ArrayList<>();
+        this.supplierAPI = SupplierAPI.getInstance();
+        getInventorySupplier();
     }
 
-    public void createList(){
-        //List = From the supplierAPI getProducts
+    public void getInventorySupplier(){
+        supplierList = supplierAPI.getSupplierProductsList();
     }
 
 
@@ -41,7 +40,7 @@ public class Supplier {
     public String toString() {
         return "Supplier{" +
                 "supplierUID=" + supplierUID +
-                ", inventorySupplier=" + inventorySupplier +
+                ", supplierList=" + supplierList +
                 '}';
     }
 }

@@ -1,12 +1,26 @@
 package com.example.rethink1.stock_ordering;
 
-public class Order {
+import lombok.Getter;
 
-    protected int orderId;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-    public void getOrder(int orderId){
+@Getter
+public class Order implements Serializable {
 
+    public int id;
+
+    public Order(int order_id) {
+        this.id = order_id;
     }
 
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                '}';
+    }
 
 }
