@@ -9,16 +9,25 @@ import org.apache.tomcat.jni.Local;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import javax.jdo.annotations.NotPersistent;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
 @Getter
 @Setter
+@Entity
 public class VirtualBasket {
+    @Id
+    @Column(name = "id", nullable = false)
+    private Long id;
+
+    @OneToMany(cascade = CascadeType.ALL)
     protected ArrayList<Product> products;
     protected String paymentMethod;
     protected LocalDate date;
+    @NotPersistent
     protected EventPublisher eventPublisher;
 
     public VirtualBasket(ArrayList<Product> products, String paymentMethod, LocalDate date) {

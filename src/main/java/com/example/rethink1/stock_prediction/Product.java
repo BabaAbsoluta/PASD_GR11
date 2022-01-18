@@ -20,9 +20,7 @@ public class Product implements Serializable {
     protected int product_id;
     protected String name;
     protected int nr_of_products;
-    @OneToOne
-    @JoinColumn(name = "supplier_supplier_uid")
-    protected Supplier supplier;
+    protected int supplierUID;
     protected int price_in_cents;
     protected String EAN_13;
     protected double vat_rate;
@@ -31,16 +29,12 @@ public class Product implements Serializable {
 
     }
 
-    public Supplier getSupplier() {
-        return supplier;
-    }
 
-
-    public Product(String name, int quantity, int product_id, Supplier supplier, int priceCents, String ean13, double vatRate) {
+    public Product(String name, int quantity, int product_id, int supplier, int priceCents, String ean13, double vatRate) {
         this.name = name;
         this.nr_of_products = quantity;
         this.product_id = product_id;
-        this.supplier = supplier;
+        this.supplierUID = supplier;
         this.price_in_cents = priceCents;
         this.EAN_13 = ean13;
         this.vat_rate = vatRate;
@@ -61,7 +55,7 @@ public class Product implements Serializable {
                 "product_id=" + product_id +
                 ", name='" + name + '\'' +
                 ", nr_of_products=" + nr_of_products +
-                ", supplier=" + supplier +
+                ", supplierUID=" + supplierUID +
                 ", price_in_cents=" + price_in_cents +
                 ", EAN_13='" + EAN_13 + '\'' +
                 ", vat_rate=" + vat_rate +

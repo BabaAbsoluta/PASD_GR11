@@ -2,9 +2,11 @@ package com.example.rethink1.stock_ordering;
 
 import lombok.Getter;
 
+import javax.persistence.Entity;
 import java.io.Serializable;
 
 @Getter
+@Entity
 public class Order implements Serializable {
 
     public int id;

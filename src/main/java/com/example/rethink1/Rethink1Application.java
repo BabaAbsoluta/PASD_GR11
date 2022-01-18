@@ -5,7 +5,6 @@ import com.example.rethink1.events.Event;
 import com.example.rethink1.stock_ordering.Supplier;
 import com.example.rethink1.stock_ordering.VirtualBasket;
 import com.example.rethink1.stock_prediction.InventorySpace;
-import com.example.rethink1.stock_prediction.Manager;
 import com.example.rethink1.stock_prediction.Product;
 import com.example.rethink1.stock_prediction.ShoppingPortfolio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,18 +35,17 @@ public class Rethink1Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         dbm = DatabaseManager.getInstance();
-
-         Supplier supplier = new Supplier(2);
-         Product p1 = new Product("Butter",10,3,supplier,239, "30176240107",
-                 0.09);
-         Product p2 = new Product("Shower Gel",10,8,supplier,959, "668205008014", 0.21);
-
-        List<Product> products = new ArrayList<>();
-        products.add(p1);
-        products.add(p2);
-
-        InventorySpace inventory = new InventorySpace(products, 2);
-        dbm.addInventory(inventory);
+//
+//         Product p1 = new Product("Butter",10,3,2,239, "30176240107",
+//                 0.09);
+//         Product p2 = new Product("Shower Gel",10,8,2,959, "668205008014", 0.21);
+//
+//        List<Product> products = new ArrayList<>();
+//        products.add(p1);
+//        products.add(p2);
+//
+//        InventorySpace inventory = new InventorySpace(products, 2);
+//        dbm.addInventory(inventory);
 
         InventorySpace inventorySpace = dbm.getInfoInventory().get(0);
 
@@ -65,7 +63,6 @@ public class Rethink1Application implements CommandLineRunner {
             switch (choice) {
                 case 1:
                     inventorySpace.show();
-                    System.out.println("Works1");
                     System.out.println(message);
                     break;
                 case 2:

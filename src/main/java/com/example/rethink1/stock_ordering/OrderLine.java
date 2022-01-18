@@ -1,8 +1,10 @@
 package com.example.rethink1.stock_ordering;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class OrderLine {
 
     public int orderLine_id;

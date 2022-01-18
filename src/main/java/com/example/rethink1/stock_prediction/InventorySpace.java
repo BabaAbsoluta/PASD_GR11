@@ -21,7 +21,7 @@ public class InventorySpace implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected int inventoryUID;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Product> products;
     protected int numberProducts;
 
@@ -93,14 +93,11 @@ public class InventorySpace implements Serializable {
      * Shows the contents of the inventory
      */
     public void show() {
-
-        DatabaseManager dbm = DatabaseManager.getInstance();
-        InventorySpace inventorySpace = dbm.getInfoInventory().get(0);
-        System.out.println("InventoryUID: " + inventorySpace.getInventoryUID());
-        for (Product p: inventorySpace.getProducts()) {
+        System.out.println("InventoryUID: " + this.getInventoryUID());
+        for (Product p: this.getProducts()) {
             System.out.println(p.toString());
         }
-        System.out.println("Number of products: " + inventorySpace.getNumberProducts());
+        System.out.println("Number of products: " + this.getNumberProducts());
         
     }
 
