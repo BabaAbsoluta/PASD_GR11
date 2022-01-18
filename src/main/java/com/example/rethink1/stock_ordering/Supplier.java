@@ -56,6 +56,15 @@ public class Supplier {
         supplierDeliveryList = supplierAPI.getSupplierDeliveryList();
     }
 
+    public List<Delivery> fetchDeliveries(){
+        getDeliveryList();
+        return supplierDeliveryList;
+    }
+
+    public SupplierAPI getSupplierAPIInstance(){
+        return SupplierAPI.getInstance();
+    }
+
 
     @Override
     public String toString() {

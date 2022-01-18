@@ -112,13 +112,13 @@ public class SupplierAPI {
         System.out.println(supplierProductsList);
     }
 
-    public void createOrderAPI(Order order) throws IOException, InterruptedException {
+    public Order createOrderAPI(Order order) throws IOException, InterruptedException, JSONException {
 
         String requestBody = objectMapper
                 .writerWithDefaultPrettyPrinter()
                 .writeValueAsString(order);
 
-        System.out.println("Create order with order_id: " + order.getId());
+        System.out.println("Create order with order_id: " + order.getOrder_id());
 
         HttpRequest requestCreateOrder = HttpRequest.newBuilder()
                 .header("Authorization", "Token ce0058bb4ad8047d7b0d87bc44843e4d35da5695")
@@ -127,8 +127,20 @@ public class SupplierAPI {
                 .build();
 
         HttpResponse<String> response = client.send(requestCreateOrder, HttpResponse.BodyHandlers.ofString());
-        System.out.println(response.statusCode());
+        System.out.println(response.body());
+        return parseCreatedOrder(response.body());
+    }
 
+    private Order parseCreatedOrder(String responseBody) throws JSONException {
+        supplierOrderList.clear();
+        JSONObject order = new JSONObject(responseBody);
+        int id = order.getInt("id");
+        int buyer = order.getInt("buyer");
+        boolean is_processed = order.getBoolean("is_processed");
+        Order newOrder = new Order(id, buyer, is_processed);
+
+        System.out.println("in the parse: " + newOrder);
+        return newOrder;
     }
 
     public void getALLOrdersAPI(){
@@ -229,7 +241,8 @@ public class SupplierAPI {
                 .writerWithDefaultPrettyPrinter()
                 .writeValueAsString(order);
 
-        System.out.println("Send order with order_id: " + order.getId());
+        System.out.println(requestBody);
+        System.out.println("Send order with order_id: " + order.getOrder_id());
 
         HttpRequest requestCreateOrder = HttpRequest.newBuilder()
                 .header("Authorization", "Token ce0058bb4ad8047d7b0d87bc44843e4d35da5695")
