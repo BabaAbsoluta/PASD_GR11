@@ -2,6 +2,7 @@ package com.example.rethink1;
 
 import com.example.rethink1.database.DatabaseManager;
 import com.example.rethink1.events.Event;
+import com.example.rethink1.events.EventPublisher;
 import com.example.rethink1.stock_ordering.VirtualBasket;
 import com.example.rethink1.stock_prediction.InventorySpace;
 import com.example.rethink1.stock_prediction.Product;
@@ -11,6 +12,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -54,32 +56,46 @@ public class Rethink1Application implements CommandLineRunner {
                 "(2) To add customer transaction\n" +
                 "(3) To check incoming stock orders\n" +
                 "(4) To check a customer's purchase history\n" +
-                "(5) Exit\n";
+                "(5) To see current prediction\n" +
+                "(6) Exit\n";
         System.out.println(message);
 
         int choice = sc.nextInt();
         while (true) {
             switch (choice) {
                 case 1:
+                    // to show current inventory
                     inventorySpace.show();
                     System.out.println(message);
                     break;
                 case 2:
+                    // to mimic a customer buying products
                     addVirtualBasket(inventorySpace);
                     System.out.println(message);
                     break;
                 case 3:
+                    // for manager to see what the current stock orders are
                     checkStockOrder();
                     System.out.println(message);
                     break;
                 case 4:
+                    // for prediction algorithm, to check a customer's history
                     checkCustomerHistory();
                     break;
                 case 5:
+                    // for manager, mimics the approval of a prediction algorithm
+                    EventPublisher eventPublisher;
+                    ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+                    eventPublisher = (EventPublisher) context.getBean("eventPublisher");
+                    eventPublisher.publishEvent("newPredictionEvent");
+                    break;
+                case 6:
+                    // exit the application
                     dbm.closeDataBase();
-                    System.exit(springApplication.exit(context));
+                    System.exit(springApplication.exit(this.context));
                     break;
                 default:
+                    // for illegal input
                     System.out.println(message);
             }
             choice = sc.nextInt();
@@ -137,8 +153,23 @@ public class Rethink1Application implements CommandLineRunner {
         // TODO: implementation
     }
 
+    /**
+     * Checking a customers purchase history aka their previous virtual basket objects
+     */
     public void checkCustomerHistory() {
         System.out.println("Enter customer UID");
+        Scanner sc = new Scanner(System.in);
+        int uid = Integer.parseInt(sc.nextLine());
+        List<ShoppingPortfolio> shoppingPortfolioList = dbm.getAllShoppingPortfolios();
+
+        for (ShoppingPortfolio s : shoppingPortfolioList) {
+            if (s.getCustomerUID().equals(String.valueOf(uid))) {
+                List<VirtualBasket> virtualBaskets = s.getPurchaseHistory();
+                for (VirtualBasket b : virtualBaskets) {
+                    System.out.println(b);
+                }
+            }
+        }
     }
 
 }

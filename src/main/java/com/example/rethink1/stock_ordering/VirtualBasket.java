@@ -56,4 +56,13 @@ public class VirtualBasket {
     }
 
 
+    @Override
+    public String toString() {
+        return "VirtualBasket{" +
+                "customerID=" + customerID +
+                ", products=" + products +
+                ", paymentMethod='" + paymentMethod + '\'' +
+                ", date=" + date +
+                '}';
+    }
 }

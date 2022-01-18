@@ -1,5 +1,6 @@
 package com.example.rethink1.stock_prediction;
 
+import com.example.rethink1.stock_ordering.Order;
 import com.example.rethink1.stock_ordering.OrderLine;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,7 +43,7 @@ public class Manager implements Serializable {
     }
 
     public boolean approve(OrderLine orderLine) {
-        System.out.println("Approve order? (1) yes (0) no");
+        System.out.println("New prediction!\nApprove order? (1) yes (0) no");
         System.out.println(orderLine.toString());
 
         Scanner sc = new Scanner(System.in);
@@ -51,7 +52,12 @@ public class Manager implements Serializable {
             return true;
         }
         else {
-            return false;
+            while (approve != 0) {
+                orderLine.change();
+                System.out.println("New prediction!\nApprove order? (1) yes (0) no");
+                approve = sc.nextInt();
+            }
+            return true;
         }
     }
 

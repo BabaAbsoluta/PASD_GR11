@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StockPrediction {
-    protected ArrayList<Product> products;
     protected static EventPublisher eventPublisher;
     protected OrderLine orderline;
     public StockPrediction() {
@@ -54,5 +53,7 @@ public class StockPrediction {
     public void sendPrediction() {
             this.eventPublisher.publishEvent("newPredictionEvent");
     }
+
+
 
 }
