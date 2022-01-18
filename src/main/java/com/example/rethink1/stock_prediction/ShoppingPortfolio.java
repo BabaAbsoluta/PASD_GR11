@@ -34,9 +34,6 @@ public class ShoppingPortfolio {
 
     public void addPurchase(VirtualBasket basket)  {
         purchaseHistory.add(basket);
-        /**
-         * TODO: Update the database, or maybe in the eventListener
-         */
     }
 
     @Override

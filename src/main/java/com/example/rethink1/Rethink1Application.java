@@ -35,17 +35,52 @@ public class Rethink1Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         dbm = DatabaseManager.getInstance();
-//
-//         Product p1 = new Product("Butter",10,3,2,239, "30176240107",
-//                 0.09);
-//         Product p2 = new Product("Shower Gel",10,8,2,959, "668205008014", 0.21);
-//
-//        List<Product> products = new ArrayList<>();
-//        products.add(p1);
-//        products.add(p2);
-//
-//        InventorySpace inventory = new InventorySpace(products, 2);
-//        dbm.addInventory(inventory);
+
+         Product p1 = new Product("Butter",10,3,2,239, "30176240107", 0.09);
+         Product p2 = new Product("Shower Gel",10,8,2,959, "668205008014", 0.21);
+           Product p3 = new Product("Jam",10,12,2,199, "49186164127", 0.09);
+           Product p4 = new Product("Peanut Butter",10,13,2,269, "32146124127", 0.09);
+           Product p5 = new Product("Skin Cream",10,14,2,549, "868125360514", 0.21);
+           Product p6 = new Product("Handwash Soap",10,15,2,129, "868403158014", 0.21);
+           Product p7 = new Product("Tissues",10,16,2,70, "33183284199", 0.21);
+           Product p8 = new Product("Toothpaste",10,17,2,175, "878325660515", 0.21);
+           Product p9 = new Product("Deoderant",10,18,2,289, "868405212713", 0.21);
+           Product p10 = new Product("Coffee Powder",10,19,2,120, "862183365512", 0.09);
+           Product p11 = new Product("Tea",10,20,2,105, "860412148014", 0.09);
+           Product p12 = new Product("Milk",10,21,2,80, "858225370911", 0.09);
+           Product p13 = new Product("Cheese",10,22,2,70, "839425508313", 0.09);
+           Product p14 = new Product("Eggs (x10)",10,4,2,349, "32186244127", 0.09);
+           Product p15 = new Product("Ketchup",10,5,2,179, "868405000014", 0.09);
+           Product p16 = new Product("Bread",10,6,2,107, "869465002314", 0.09);
+           Product p17 = new Product("Basmati rice",10,7,2,439, "82186947127", 0.09);
+           Product p18 = new Product("Fruit Juice",10,9,2,245, "32146284120", 0.09);
+           Product p19 = new Product("Sunflower Oil",10,10,2,289, "85186937107", 0.09);
+           Product p20 = new Product("Crackers",10,11,2,78, "37182204124", 0.09);
+
+        List<Product> products = new ArrayList<>();
+        products.add(p1);
+        products.add(p2);
+        products.add(p3);
+        products.add(p4);
+        products.add(p5);
+        products.add(p6);
+        products.add(p7);
+        products.add(p8);
+        products.add(p9);
+        products.add(p10);
+        products.add(p11);
+        products.add(p12);
+        products.add(p13);
+        products.add(p14);
+        products.add(p15);
+        products.add(p16);
+        products.add(p17);
+        products.add(p18);
+        products.add(p19);
+        products.add(p20);
+
+        InventorySpace inventory = new InventorySpace(products, products.size());
+        dbm.addInventory(inventory);
 
         InventorySpace inventorySpace = dbm.getInfoInventory().get(0);
 
@@ -70,7 +105,7 @@ public class Rethink1Application implements CommandLineRunner {
                     break;
                 case 2:
                     // to mimic a customer buying products
-                    addVirtualBasket(inventorySpace);
+                    addVirtualBasket();
                     System.out.println(message);
                     break;
                 case 3:
@@ -103,50 +138,12 @@ public class Rethink1Application implements CommandLineRunner {
     }
 
     /** Adds a customers virtual basket to their shopping portfolio and updates the database
-     * @param inventorySpace the inventory space of the store
      */
-    public void addVirtualBasket(InventorySpace inventorySpace) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter customer UID");
-        int uid = Integer.parseInt(sc.nextLine());
-
-        System.out.println("Enter number of products");
-        int num = Integer.parseInt(sc.nextLine());
-        System.out.println("Enter payment method");
-        String payment = sc.nextLine();
-
-
-        ArrayList<Product> products = new ArrayList<>();
-        int i = 0;
-        while (i < num) {
-            System.out.println("Enter product name");
-            String name = sc.nextLine();
-            Product p = inventorySpace.findProduct(name);
-
-            if (p == null) {
-                System.out.println("Not a valid product");
-            } else {
-                System.out.println("Enter product quantity");
-                int quantity = Integer.parseInt(sc.nextLine());
-                inventorySpace.removeProduct(p, quantity);
-                products.add(p);
-                i++;
-            }
-        }
-
-        LocalDate date = LocalDate.now();
-        VirtualBasket basket = new VirtualBasket(products, payment, date, uid);
-
-        List<ShoppingPortfolio> shoppingPortfolioList = dbm.getAllShoppingPortfolios();
-
-        for (ShoppingPortfolio s: shoppingPortfolioList) {
-            if (s.getCustomerUID().equals(String.valueOf(uid))) {
-                s.addPurchase(basket);
-                dbm.removeShoppingPortfolio(String.valueOf(uid));
-                dbm.addShoppingPortfolio(s);
-            }
-        }
-
+    public void addVirtualBasket() {
+        EventPublisher eventPublisher;
+        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        eventPublisher = (EventPublisher) context.getBean("eventPublisher");
+        eventPublisher.publishEvent("newPurchaseEvent");
     }
 
     public void checkStockOrder() {
@@ -159,11 +156,12 @@ public class Rethink1Application implements CommandLineRunner {
     public void checkCustomerHistory() {
         System.out.println("Enter customer UID");
         Scanner sc = new Scanner(System.in);
-        int uid = Integer.parseInt(sc.nextLine());
+        String uid = sc.nextLine();
         List<ShoppingPortfolio> shoppingPortfolioList = dbm.getAllShoppingPortfolios();
 
         for (ShoppingPortfolio s : shoppingPortfolioList) {
-            if (s.getCustomerUID().equals(String.valueOf(uid))) {
+            if (s.getCustomerUID().equals(uid)) {
+                System.out.println("Works");
                 List<VirtualBasket> virtualBaskets = s.getPurchaseHistory();
                 for (VirtualBasket b : virtualBaskets) {
                     System.out.println(b);
