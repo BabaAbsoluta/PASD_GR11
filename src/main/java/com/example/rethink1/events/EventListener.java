@@ -2,10 +2,12 @@ package com.example.rethink1.events;
 
 import com.example.rethink1.database.DatabaseManager;
 import com.example.rethink1.stock_ordering.OrderLine;
+import com.example.rethink1.stock_ordering.OrderingAndDelivering;
 import com.example.rethink1.stock_ordering.VirtualBasket;
 import com.example.rethink1.stock_prediction.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import org.springframework.context.ApplicationListener;
 
 import javax.swing.*;
@@ -22,7 +24,9 @@ public class EventListener implements ApplicationListener<Event> {
     protected OrderLine orderline;
     protected InventorySpace inventorySpace;
     protected VirtualBasket virtualBasket;
+    protected OrderingAndDelivering orderingAndDelivering;
 
+    @SneakyThrows
     public void onApplicationEvent(Event event) {
 
         // what to do when event is triggered
@@ -38,6 +42,10 @@ public class EventListener implements ApplicationListener<Event> {
 
             if (approval) {
                 stockforecast.sendPrediction();
+
+                //sending orderLine to stock and delivery system
+                orderingAndDelivering = OrderingAndDelivering.getInstance();
+                orderingAndDelivering.receiveOrderLine(orderline);
             }
 
         }
@@ -97,6 +105,12 @@ public class EventListener implements ApplicationListener<Event> {
 
         if (event.getMessage().equals("newStockEvent")) {
             // update inventory object
+
+            //Make new product, or update the product if it inventory
+
+            //then inventory
+
+
 
             // create a new stock forecast
             this.stockforecast = new StockPrediction();

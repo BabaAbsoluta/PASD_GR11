@@ -1,5 +1,6 @@
 package com.example.rethink1.stock_ordering;
 
+import com.example.rethink1.database.DatabaseManager;
 import com.example.rethink1.events.EventPublisher;
 import org.json.JSONException;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -14,8 +15,16 @@ public class OrderingAndDelivering {
     private Supplier supplier;
     private List<Delivery> deliveryListSystem;
     private static EventPublisher eventPublisher;
+    private static OrderingAndDelivering instance;
 
-    public OrderingAndDelivering() {
+    public static OrderingAndDelivering getInstance(){
+        if (instance == null) {
+            instance = new OrderingAndDelivering();
+        }
+        return instance;
+    }
+
+    private OrderingAndDelivering() {
         this.supplier = new Supplier(1);
         this.deliveryListSystem = new ArrayList<>();
         ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");

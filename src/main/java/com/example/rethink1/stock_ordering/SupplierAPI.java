@@ -68,7 +68,7 @@ public class SupplierAPI {
 
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println("Connection with supplierAPI is made, user information:");
+            System.out.println("Connection with the supplierAPI is made");
             System.out.println(response.body());
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -265,7 +265,7 @@ public class SupplierAPI {
 
         try {
             HttpResponse<String> response = client.send(requestGetDelivery, HttpResponse.BodyHandlers.ofString());
-            System.out.println("Get all deliveries:");
+            System.out.println("The stock orders:");
             parseDelivery(response.body());
         } catch (IOException | InterruptedException | JSONException e) {
             e.printStackTrace();
