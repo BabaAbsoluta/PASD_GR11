@@ -2,13 +2,16 @@ package com.example.rethink1.stock_ordering;
 
 import lombok.Getter;
 
+import javax.jdo.annotations.Index;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 @Getter
 @Entity
 public class Order implements Serializable {
 
+    @Id
     public int id;
     public int buyer;
     public boolean is_processed;
@@ -21,6 +24,10 @@ public class Order implements Serializable {
         this.id = order_id;
         this.buyer = buyer;
         this.is_processed = is_processed;
+    }
+
+    public Order() {
+
     }
 
 

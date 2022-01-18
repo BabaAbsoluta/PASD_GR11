@@ -2,7 +2,6 @@ package com.example.rethink1;
 
 import com.example.rethink1.database.DatabaseManager;
 import com.example.rethink1.events.Event;
-import com.example.rethink1.stock_ordering.Supplier;
 import com.example.rethink1.stock_ordering.VirtualBasket;
 import com.example.rethink1.stock_prediction.InventorySpace;
 import com.example.rethink1.stock_prediction.Product;
@@ -15,7 +14,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -90,44 +88,44 @@ public class Rethink1Application implements CommandLineRunner {
     public void addVirtualBasket(InventorySpace inventorySpace) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter customer UID");
-        String uid = sc.nextLine();
+        int uid = Integer.parseInt(sc.nextLine());
 
         System.out.println("Enter number of products");
-        int num = sc.nextInt();
+        int num = Integer.parseInt(sc.nextLine());
         System.out.println("Enter payment method");
         String payment = sc.nextLine();
 
+
         ArrayList<Product> products = new ArrayList<>();
-        for (int i = 0; i < num; ++i) {
+        int i = 0;
+        while (i < num) {
             System.out.println("Enter product name");
             String name = sc.nextLine();
-            System.out.println("Enter product quantity");
-            int quantity = sc.nextInt();
             Product p = inventorySpace.findProduct(name);
-
 
             if (p == null) {
                 System.out.println("Not a valid product");
             } else {
-                p.setNr_of_products(quantity + p.getNr_of_products());
+                System.out.println("Enter product quantity");
+                int quantity = Integer.parseInt(sc.nextLine());
+                inventorySpace.removeProduct(p, quantity);
                 products.add(p);
+                i++;
             }
         }
+
         LocalDate date = LocalDate.now();
-        VirtualBasket basket = new VirtualBasket(products, payment, date);
+        VirtualBasket basket = new VirtualBasket(products, payment, date, uid);
 
         List<ShoppingPortfolio> shoppingPortfolioList = dbm.getAllShoppingPortfolios();
 
         for (ShoppingPortfolio s: shoppingPortfolioList) {
-            if (s.getCustomerUID().equals(uid)) {
+            if (s.getCustomerUID().equals(String.valueOf(uid))) {
                 s.addPurchase(basket);
-                dbm.removeShoppingPortfolio(uid);
+                dbm.removeShoppingPortfolio(String.valueOf(uid));
                 dbm.addShoppingPortfolio(s);
             }
         }
-
-        //event triggered to update stock prediction and process payment
-        basket.getEventPublisher().publishEvent("newPurchaseEvent");
 
     }
 

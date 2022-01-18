@@ -20,7 +20,7 @@ public class StockPrediction {
 
     public void init() {
         // adding the event
-        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
+        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("src/main/resources/beans.xml");
         this.eventPublisher = (EventPublisher) context.getBean("eventPublisher");
         predict();
 
