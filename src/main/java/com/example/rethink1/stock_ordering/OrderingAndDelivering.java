@@ -1,6 +1,9 @@
 package com.example.rethink1.stock_ordering;
 
+import com.example.rethink1.events.EventPublisher;
 import org.json.JSONException;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,10 +13,13 @@ public class OrderingAndDelivering {
 
     private Supplier supplier;
     private List<Delivery> deliveryListSystem;
+    private static EventPublisher eventPublisher;
 
     public OrderingAndDelivering() {
         this.supplier = new Supplier(1);
         this.deliveryListSystem = new ArrayList<>();
+        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        this.eventPublisher = (EventPublisher) context.getBean("eventPublisher");
 
     }
 
@@ -38,7 +44,7 @@ public class OrderingAndDelivering {
             Delivery delivery = deliveryListSystem.get(i);
             if (delivery.getOrder_id() == order.getOrder_id() ){
                 // order is delivered, send orderLine to the inventory
-
+                eventPublisher.publishEvent("newStockEvent");
             }
         }
     }
