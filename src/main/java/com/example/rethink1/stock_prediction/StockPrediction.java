@@ -1,11 +1,14 @@
 package com.example.rethink1.stock_prediction;
 
+import com.example.rethink1.database.DatabaseManager;
 import com.example.rethink1.events.EventPublisher;
 import com.example.rethink1.stock_ordering.OrderLine;
+import com.example.rethink1.stock_ordering.VirtualBasket;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class StockPrediction {
     protected ArrayList<Product> products;
@@ -17,24 +20,39 @@ public class StockPrediction {
 
     public void init() {
         // adding the event
-        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
+        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("src/main/resources/beans.xml");
         this.eventPublisher = (EventPublisher) context.getBean("eventPublisher");
         predict();
 
     }
 
     public OrderLine predict() {
-        // TODO: prediction algorithm
-         this.orderline = new OrderLine();
-        return this.orderline;
+        // not really a prediction algorithm but for placement purposes
+        this.orderline = new OrderLine();
+
+        DatabaseManager dbm = DatabaseManager.getInstance();
+        List<ShoppingPortfolio> shoppingPortfolios = dbm.getAllShoppingPortfolios();
+        for (ShoppingPortfolio shoppingPortfolio: shoppingPortfolios) {
+            List<VirtualBasket> baskets = shoppingPortfolio.getPurchaseHistory();
+            for (VirtualBasket basket: baskets) {
+                List<Product> products = basket.getProducts();
+                for (Product product: products) {
+                    if (product.getNr_of_products() <= 2) {
+                        orderline.setProduct_id(product.getProduct_id());
+                        orderline.setNr_of_products(10);
+                        orderline.setOrder_id(1);
+                        return orderline;
+
+                    }
+                }
+            }
+
+        }
+        return orderline;
     }
 
     public void sendPrediction() {
-        boolean approved = true;
-
-        if (approved) {
             this.eventPublisher.publishEvent("newPredictionEvent");
-        }
     }
 
 }

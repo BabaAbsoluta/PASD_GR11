@@ -3,6 +3,7 @@ package com.example.rethink1.stock_ordering;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -17,9 +18,11 @@ public class Supplier {
     @Getter
     protected int supplierUID;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     protected List<SupplierProducts> supplierList;
+    @OneToMany(cascade = CascadeType.ALL)
     protected List<Order> supplierOrderList;
+    @OneToMany(cascade = CascadeType.ALL)
     protected List<Delivery> supplierDeliveryList;
     transient SupplierAPI supplierAPI;
 

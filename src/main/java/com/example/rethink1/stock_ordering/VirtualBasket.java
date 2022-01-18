@@ -9,24 +9,38 @@ import org.apache.tomcat.jni.Local;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import javax.jdo.annotations.NotPersistent;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
 @Getter
 @Setter
+@Entity
 public class VirtualBasket {
+    @Id
+    private int customerID;
+
+    @OneToMany(cascade = CascadeType.ALL)
     protected ArrayList<Product> products;
     protected String paymentMethod;
     protected LocalDate date;
-    protected EventPublisher eventPublisher;
+    @Transient
+    transient EventPublisher eventPublisher;
 
-    public VirtualBasket(ArrayList<Product> products, String paymentMethod, LocalDate date) {
-        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
+    public VirtualBasket(ArrayList<Product> products, String paymentMethod, LocalDate date, int customerID) {
+        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("src/main/resources/beans.xml");
         this.eventPublisher = (EventPublisher) context.getBean("eventPublisher");
         this.products = products;
+        this.customerID = customerID;
         this.paymentMethod = paymentMethod;
         this.date = date;
+        this.eventPublisher.publishEvent("newPurchaseEvent");
+    }
+
+    public VirtualBasket() {
+
     }
 
     public ArrayList<Product> getProducts() {
