@@ -96,7 +96,7 @@ public class EventListener implements ApplicationListener<Event> {
                 }
             }
 
-            if (found == false) {
+            if (!found) {
                 // otherwise if customer does not have a shopping portfolio add to odb
                 ShoppingPortfolio shoppingPortfolio = new ShoppingPortfolio(String.valueOf(uid));
                 shoppingPortfolio.addPurchase(basket);
