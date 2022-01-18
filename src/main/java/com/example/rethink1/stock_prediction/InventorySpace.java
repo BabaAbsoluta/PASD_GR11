@@ -21,7 +21,7 @@ public class InventorySpace implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected int inventoryUID;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Product> products;
     protected int numberProducts;
 
@@ -32,31 +32,36 @@ public class InventorySpace implements Serializable {
 
 
     public InventorySpace(int numberProducts) {
-        this.products = new ArrayList<Product>();
+        this.products = new ArrayList<>();
         this.numberProducts = numberProducts;
     }
+
+    public InventorySpace(List<Product> products, int numberProducts) {
+        this.products = products;
+        this.numberProducts = numberProducts;
+    }
+
 
     /** Removes a product from the inventory space. Done when a customer buys a product
      * @param product Product being bought by the customer
      */
-    public void removeProduct(Product product, DatabaseManager dbm) {
+    public void removeProduct(Product product, int quantity) {
+        DatabaseManager dbm = DatabaseManager.getInstance();
         InventorySpace inventorySpace = dbm.getInfoInventory().get(0);
         dbm.removeInventory(inventorySpace.getInventoryUID());
+
         // if removing it is valid then
         if (inventorySpace.numberProducts > 0) {
-            // reduce the number of products
-            --inventorySpace.numberProducts;
-
             for (Product p : inventorySpace.products) {
-                if(p.getProductUID().equals(product.getProductUID())) {
+                if(p.getProduct_id() == product.getProduct_id()) {
                     // if there are more than one quantity of the product
-                    if(p.getQuantity() > 1){
-                        // minus the quantity
-                        p.remove();
+                    if(p.getNr_of_products()-quantity >= 0){
+                        p.setNr_of_products(p.getNr_of_products() - quantity);
                     }
                     else {
                         // else remove the product from the products arraylist
                         inventorySpace.products.remove(p);
+                        inventorySpace.setNumberProducts(inventorySpace.getNumberProducts() - 1);
                     }
                 }
             }
@@ -68,12 +73,13 @@ public class InventorySpace implements Serializable {
      * Adds products to the inventory. Done after supply order is recieved from the supplier
      * @param product the product to add to the inventory
      */
-    public void addProduct(Product product, DatabaseManager dbm) {
+    public void addProduct(Product product) {
+        DatabaseManager dbm = DatabaseManager.getInstance();
         InventorySpace inventorySpace = dbm.getInfoInventory().get(0);
         dbm.removeInventory(inventorySpace.getInventoryUID());
         for (Product p : inventorySpace.products) {
             // check if product exists in inventory, if it does then increment quantity
-            if (p.getProductUID().equals(product.getProductUID())) {
+            if (p.getProduct_id() == product.getProduct_id()) {
                 p.add();
                 return;
             }
@@ -86,13 +92,13 @@ public class InventorySpace implements Serializable {
     /**
      * Shows the contents of the inventory
      */
-    public void show(DatabaseManager dbm) {
-        InventorySpace inventorySpace = dbm.getInfoInventory().get(0);
-        for (Product p: inventorySpace.getProducts()) {
+    public void show() {
+        System.out.println("InventoryUID: " + this.getInventoryUID());
+        for (Product p: this.getProducts()) {
             System.out.println(p.toString());
         }
-
-
+        System.out.println("Number of products: " + this.getNumberProducts());
+        
     }
 
     public Product findProduct(String name) {

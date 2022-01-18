@@ -1,17 +1,32 @@
 package com.example.rethink1.events;
 
+import com.example.rethink1.database.DatabaseManager;
 import com.example.rethink1.stock_ordering.OrderLine;
-import com.example.rethink1.stock_prediction.Manager;
-import com.example.rethink1.stock_prediction.StockPrediction;
+import com.example.rethink1.stock_ordering.OrderingAndDelivering;
+import com.example.rethink1.stock_ordering.VirtualBasket;
+import com.example.rethink1.stock_prediction.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.SneakyThrows;
 import org.springframework.context.ApplicationListener;
 
 import javax.swing.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
+@Getter
+@Setter
 public class EventListener implements ApplicationListener<Event> {
 
-    private StockPrediction stockforecast;
-    private OrderLine orderline;
+    protected StockPrediction stockforecast;
+    protected OrderLine orderline;
+    protected InventorySpace inventorySpace;
+    protected VirtualBasket virtualBasket;
+    protected OrderingAndDelivering orderingAndDelivering;
 
+    @SneakyThrows
     public void onApplicationEvent(Event event) {
 
         // what to do when event is triggered
@@ -27,27 +42,88 @@ public class EventListener implements ApplicationListener<Event> {
 
             if (approval) {
                 stockforecast.sendPrediction();
-            }
-            else {
-                System.out.println("Not approved");
+
+                //sending orderLine to stock and delivery system
+                orderingAndDelivering = OrderingAndDelivering.getInstance();
+                orderingAndDelivering.receiveOrderLine(orderline);
             }
 
         }
 
+        // mimicks the purchase of a new event
         if (event.getMessage().equals("newPurchaseEvent")) {
-            // update inventory object
+            DatabaseManager dbm = DatabaseManager.getInstance();
+            Scanner sc = new Scanner(System.in);
 
-            // update customers shopping portfolio
+            // get details of the purchase
+            System.out.println("Enter customer UID");
+            int uid = Integer.parseInt(sc.nextLine());
+            System.out.println("Enter number of products");
+            int num = Integer.parseInt(sc.nextLine());
+            System.out.println("Enter payment method");
+            String payment = sc.nextLine();
 
-            // create a new stock forecast
+
+            ArrayList<Product> products = new ArrayList<>();
+            int i = 0;
+            while (i < num) {
+                System.out.println("Enter product name");
+                String name = sc.nextLine();
+                Product p = inventorySpace.findProduct(name);
+
+                // if product does not exist in inventory...
+                if (p == null) {
+                    System.out.println("Not a valid product");
+                } else {    // otherwise if it does
+                    System.out.println("Enter product quantity");
+                    int quantity = Integer.parseInt(sc.nextLine());
+                    // remove it from the inventory
+                    inventorySpace.removeProduct(p, quantity);
+                    // add it to the virtual basket's products
+                    products.add(p);
+                    i++;
+                }
+            }
+
+            LocalDate date = LocalDate.now();
+
+            // create a new virtual basket, for purchase history tracking
+            VirtualBasket basket = new VirtualBasket(products, payment, date, uid);
+
+            // get shopping portfolios
+            List<ShoppingPortfolio> shoppingPortfolioList = dbm.getAllShoppingPortfolios();
+            boolean found = false;
+
+            for (ShoppingPortfolio s: shoppingPortfolioList) {
+                // check if customer has a shopping portfolio
+                if (s.getCustomerUID().equals(String.valueOf(uid))) {
+                    s.addPurchase(basket);
+                    dbm.removeShoppingPortfolio(String.valueOf(uid));
+                    dbm.addShoppingPortfolio(s);
+                    found = true;
+                }
+            }
+
+            if (!found) {
+                // otherwise if customer does not have a shopping portfolio add to odb
+                ShoppingPortfolio shoppingPortfolio = new ShoppingPortfolio(String.valueOf(uid));
+                shoppingPortfolio.addPurchase(basket);
+                dbm.addShoppingPortfolio(shoppingPortfolio);
+            }
+
+            // create a new stock forecast based on the new change in inventory
             this.stockforecast = new StockPrediction();
             stockforecast.predict();
-
-            // process payment
         }
 
         if (event.getMessage().equals("newStockEvent")) {
             // update inventory object
+
+            //Make new product, or update the product if it inventory
+
+            //then inventory
+
+
 
             // create a new stock forecast
             this.stockforecast = new StockPrediction();

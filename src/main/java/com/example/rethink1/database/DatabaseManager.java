@@ -29,12 +29,11 @@ public class DatabaseManager {
     /*SQL for the list and info of the objects in the database*/
     private static final String SELECT_ALL_SUPPLIERS = "SELECT s FROM Supplier s";
     private static final String SELECT_ALL_SHOPPINGPORTFOLIOS = "SELECT s FROM ShoppingPortfolio s";
-    private static final String SELECT_ALL_INVENTORY = "SELECT i FROM InventorySpace s";
+    private static final String SELECT_ALL_INVENTORY = "SELECT s FROM InventorySpace s";
     private static final String SELECT_MANAGER = "SELECT m FROM Manager m";
 
     /*SQL for the update methods*/
     private static final String SELECT_SHOPPINGPORT_WITH_CUID = "SELECT s FROM ShoppingPortfolio s WHERE s.customerUID='";
-    private static final String SELECT_INVENTORY_WITH_UID = "SELECT i FROM InventorySpace i WHERE i.inventoryUID='";
 
     private EntityManagerFactory managerFactory;
     private EntityManager manager;
@@ -138,22 +137,19 @@ public class DatabaseManager {
 
 
     public void updatePortfolio(ShoppingPortfolio shoppingPortfolio){
-        var query = manager.createQuery(SELECT_SHOPPINGPORT_WITH_CUID + shoppingPortfolio.getCustomerUID() + END_STRING, ShoppingPortfolio.class);
-        manager.getTransaction().begin();
-        ShoppingPortfolio matchedPortfolio = query.getSingleResult();
-//        idk if you can replace an array with an array, or will you get double values
-//        matchedPortfolio.setPurchaseHistory(shoppingPortfolio.getPurchaseHistory());
-        manager.getTransaction().commit();
+        removeShoppingPortfolio(shoppingPortfolio.getCustomerUID());
+        addShoppingPortfolio(shoppingPortfolio);
+
     }
 
     public void updateInventory(InventorySpace inventorySpace){
-        var query = manager.createQuery(SELECT_INVENTORY_WITH_UID + inventorySpace.getInventoryUID() + END_STRING, InventorySpace.class);
-        manager.getTransaction().begin();
-        InventorySpace matchedInventory = query.getSingleResult();
-//        idk if you can replace an array with an array, or will you get double values
-//        matchedInventory.setProducts(inventorySpace.getProducts());
-//        matchedInventory.setNumberProducts(inventorySpace.getNumberProducts());
-        manager.getTransaction().commit();
+        removeInventory(inventorySpace.getInventoryUID());
+        addInventory(inventorySpace);
+    }
+
+    public void updateSupplier(Supplier supplier){
+        removeSupplier(supplier.getSupplierUID());
+        addSupplier(supplier);
     }
 
 
