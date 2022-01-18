@@ -2,11 +2,13 @@ package com.example.rethink1.events;
 
 import com.example.rethink1.database.DatabaseManager;
 import com.example.rethink1.stock_ordering.*;
+import com.example.rethink1.stock_ordering.VirtualBasket;
 import com.example.rethink1.stock_prediction.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.time.LocalDate;
@@ -16,6 +18,7 @@ import java.util.Scanner;
 
 @Getter
 @Setter
+@Component
 public class EventListener implements ApplicationListener<Event> {
 
     protected StockPrediction stockforecast;
@@ -32,10 +35,14 @@ public class EventListener implements ApplicationListener<Event> {
     protected String EAN_13;
     protected double vat_rate;
 
+    @org.springframework.context.event.EventListener
     @SneakyThrows
+    @Override
     public void onApplicationEvent(Event event) {
 
         // what to do when event is triggered
+
+        // if a new prediction needs to be created
         if (event.getMessage().equals("newPredictionEvent")) {
 
             // create an orderline
@@ -56,7 +63,7 @@ public class EventListener implements ApplicationListener<Event> {
 
         }
 
-        // mimicks the purchase of a new event
+        // mimics the purchase of a new event
         if (event.getMessage().equals("newPurchaseEvent")) {
             DatabaseManager dbm = DatabaseManager.getInstance();
             Scanner sc = new Scanner(System.in);
@@ -65,6 +72,7 @@ public class EventListener implements ApplicationListener<Event> {
             // get details of the purchase
             System.out.println("Enter customer UID");
             int uid = Integer.parseInt(sc.nextLine());
+
             System.out.println("Enter number of products");
             int num = Integer.parseInt(sc.nextLine());
             System.out.println("Enter payment method");

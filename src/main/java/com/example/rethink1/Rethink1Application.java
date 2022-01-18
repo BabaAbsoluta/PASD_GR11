@@ -40,28 +40,28 @@ public class Rethink1Application implements CommandLineRunner {
     public void run(String... args) throws Exception {
         dbm = DatabaseManager.getInstance();
         supplierAPI = SupplierAPI.getInstance();
-
-        Customer c1 = new Customer("1111","Miguel","megusta",1400,true);
-        Customer c2 = new Customer("1112","Rodrigo","megustaMiguel",1900,true);
-        Customer c3 = new Customer("1113","Fernando","varoom",1700,true);
-        Customer c4 = new Customer("1114","Windy","megusta",1500,true);
-        Customer c5 = new Customer("1115","Esteban Julio Ricardo Montoya de la Rosa Ramirez","password",1400,true);
-        Customer c6 = new Customer("1116","Bob","chicken",999,false);
-        Customer c7 = new Customer("1117","Lola","labradoodle",1800,true);
-        Customer c8 = new Customer("1118","Rochelle","VvKyyu2;rrqUB&b",1500,true);
-        Customer c9 = new Customer("1119","Pink","floyd",1300,true);
-
-
-      //  ShoppingPortfolio s1 = new ShoppingPortfolio("1111");
-       // ShoppingPortfolio s2 = new ShoppingPortfolio("1112");
-       // ShoppingPortfolio s3 = new ShoppingPortfolio("1113");
-       // ShoppingPortfolio s4 = new ShoppingPortfolio("1114");
-       // ShoppingPortfolio s5 = new ShoppingPortfolio("1115");
-       // ShoppingPortfolio s6 = new ShoppingPortfolio("1116");
-       // ShoppingPortfolio s7 = new ShoppingPortfolio("1117");
-       // ShoppingPortfolio s8 = new ShoppingPortfolio("1118");
-       // ShoppingPortfolio s9 = new ShoppingPortfolio("1119");
-
+//
+//        Customer c1 = new Customer("1111","Miguel","megusta",1400,true);
+//        Customer c2 = new Customer("1112","Rodrigo","megustaMiguel",1900,true);
+//        Customer c3 = new Customer("1113","Fernando","varoom",1700,true);
+//        Customer c4 = new Customer("1114","Windy","megusta",1500,true);
+//        Customer c5 = new Customer("1115","Esteban Julio Ricardo Montoya de la Rosa Ramirez","password",1400,true);
+//        Customer c6 = new Customer("1116","Bob","chicken",999,false);
+//        Customer c7 = new Customer("1117","Lola","labradoodle",1800,true);
+//        Customer c8 = new Customer("1118","Rochelle","VvKyyu2;rrqUB&b",1500,true);
+//        Customer c9 = new Customer("1119","Pink","floyd",1300,true);
+//
+//
+//        ShoppingPortfolio s1 = new ShoppingPortfolio("1111");
+//        ShoppingPortfolio s2 = new ShoppingPortfolio("1112");
+//        ShoppingPortfolio s3 = new ShoppingPortfolio("1113");
+//        ShoppingPortfolio s4 = new ShoppingPortfolio("1114");
+//        ShoppingPortfolio s5 = new ShoppingPortfolio("1115");
+//        ShoppingPortfolio s6 = new ShoppingPortfolio("1116");
+//        ShoppingPortfolio s7 = new ShoppingPortfolio("1117");
+//        ShoppingPortfolio s8 = new ShoppingPortfolio("1118");
+//        ShoppingPortfolio s9 = new ShoppingPortfolio("1119");
+//
 //         Product p1 = new Product("Butter",10,3,2,239, "30176240107", 0.09);
 //         Product p2 = new Product("Shower Gel",10,8,2,959, "668205008014", 0.21);
 //           Product p3 = new Product("Jam",10,12,2,199, "49186164127", 0.09);
@@ -107,15 +107,15 @@ public class Rethink1Application implements CommandLineRunner {
 //
 //        InventorySpace inventory = new InventorySpace(products, products.size());
 //        dbm.addInventory(inventory);
-       // dbm.addShoppingPortfolio(s1);
-      //  dbm.addShoppingPortfolio(s2);
-      //  dbm.addShoppingPortfolio(s3);
-      //  dbm.addShoppingPortfolio(s4);
-      //  dbm.addShoppingPortfolio(s5);
-       // dbm.addShoppingPortfolio(s6);
-      //  dbm.addShoppingPortfolio(s7);
-      //  dbm.addShoppingPortfolio(s8);
-      //  dbm.addShoppingPortfolio(s9);
+//        dbm.addShoppingPortfolio(s1);
+//        dbm.addShoppingPortfolio(s2);
+//        dbm.addShoppingPortfolio(s3);
+//        dbm.addShoppingPortfolio(s4);
+//        dbm.addShoppingPortfolio(s5);
+//        dbm.addShoppingPortfolio(s6);
+//        dbm.addShoppingPortfolio(s7);
+//        dbm.addShoppingPortfolio(s8);
+//        dbm.addShoppingPortfolio(s9);
 
 
         InventorySpace inventorySpace = dbm.getInfoInventory().get(0);
@@ -152,6 +152,7 @@ public class Rethink1Application implements CommandLineRunner {
                 case 4:
                     // for prediction algorithm, to check a customer's history
                     checkCustomerHistory();
+                    System.out.println(message);
                     break;
                 case 5:
                     // for manager, mimics the approval of a prediction algorithm
@@ -175,6 +176,7 @@ public class Rethink1Application implements CommandLineRunner {
 
     /** Adds a customers virtual basket to their shopping portfolio and updates the database
      */
+
     public void addVirtualBasket() {
         EventPublisher eventPublisher;
         ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");

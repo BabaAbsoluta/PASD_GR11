@@ -28,8 +28,6 @@ public class VirtualBasket {
     protected ArrayList<Product> products;
     protected String paymentMethod;
     protected LocalDate date;
-    @Transient
-    transient EventPublisher eventPublisher;
 
     public VirtualBasket(ArrayList<Product> products, String paymentMethod, LocalDate date, int customerID) {
 
@@ -37,10 +35,6 @@ public class VirtualBasket {
         this.customerID = customerID;
         this.paymentMethod = paymentMethod;
         this.date = date;
-
-        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
-        this.eventPublisher = (EventPublisher) context.getBean("eventPublisher");
-        this.eventPublisher.publishEvent("newPurchaseEvent");
     }
 
     public VirtualBasket() {
