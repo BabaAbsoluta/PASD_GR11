@@ -52,15 +52,15 @@ public class Rethink1Application implements CommandLineRunner {
         Customer c9 = new Customer("1119","Pink","floyd",1300,true);
 
 
-        ShoppingPortfolio s1 = new ShoppingPortfolio("1111");
-        ShoppingPortfolio s2 = new ShoppingPortfolio("1112");
-        ShoppingPortfolio s3 = new ShoppingPortfolio("1113");
-        ShoppingPortfolio s4 = new ShoppingPortfolio("1114");
-        ShoppingPortfolio s5 = new ShoppingPortfolio("1115");
-        ShoppingPortfolio s6 = new ShoppingPortfolio("1116");
-        ShoppingPortfolio s7 = new ShoppingPortfolio("1117");
-        ShoppingPortfolio s8 = new ShoppingPortfolio("1118");
-        ShoppingPortfolio s9 = new ShoppingPortfolio("1119");
+      //  ShoppingPortfolio s1 = new ShoppingPortfolio("1111");
+       // ShoppingPortfolio s2 = new ShoppingPortfolio("1112");
+       // ShoppingPortfolio s3 = new ShoppingPortfolio("1113");
+       // ShoppingPortfolio s4 = new ShoppingPortfolio("1114");
+       // ShoppingPortfolio s5 = new ShoppingPortfolio("1115");
+       // ShoppingPortfolio s6 = new ShoppingPortfolio("1116");
+       // ShoppingPortfolio s7 = new ShoppingPortfolio("1117");
+       // ShoppingPortfolio s8 = new ShoppingPortfolio("1118");
+       // ShoppingPortfolio s9 = new ShoppingPortfolio("1119");
 
 //         Product p1 = new Product("Butter",10,3,2,239, "30176240107", 0.09);
 //         Product p2 = new Product("Shower Gel",10,8,2,959, "668205008014", 0.21);
@@ -107,6 +107,16 @@ public class Rethink1Application implements CommandLineRunner {
 //
 //        InventorySpace inventory = new InventorySpace(products, products.size());
 //        dbm.addInventory(inventory);
+       // dbm.addShoppingPortfolio(s1);
+      //  dbm.addShoppingPortfolio(s2);
+      //  dbm.addShoppingPortfolio(s3);
+      //  dbm.addShoppingPortfolio(s4);
+      //  dbm.addShoppingPortfolio(s5);
+       // dbm.addShoppingPortfolio(s6);
+      //  dbm.addShoppingPortfolio(s7);
+      //  dbm.addShoppingPortfolio(s8);
+      //  dbm.addShoppingPortfolio(s9);
+
 
         InventorySpace inventorySpace = dbm.getInfoInventory().get(0);
 
@@ -187,7 +197,7 @@ public class Rethink1Application implements CommandLineRunner {
 
         for (ShoppingPortfolio s : shoppingPortfolioList) {
             if (s.getCustomerUID().equals(uid)) {
-                System.out.println("Works");
+                System.out.println(s.getPurchaseHistory());
                 List<VirtualBasket> virtualBaskets = s.getPurchaseHistory();
                 for (VirtualBasket b : virtualBaskets) {
                     System.out.println(b);
