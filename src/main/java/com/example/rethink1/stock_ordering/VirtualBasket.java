@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.tomcat.jni.Local;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.jdo.annotations.NotPersistent;
@@ -18,6 +19,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
+
 public class VirtualBasket {
     @Id
     private int customerID;
@@ -30,12 +32,14 @@ public class VirtualBasket {
     transient EventPublisher eventPublisher;
 
     public VirtualBasket(ArrayList<Product> products, String paymentMethod, LocalDate date, int customerID) {
-        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("src/main/resources/beans.xml");
-        this.eventPublisher = (EventPublisher) context.getBean("eventPublisher");
+
         this.products = products;
         this.customerID = customerID;
         this.paymentMethod = paymentMethod;
         this.date = date;
+
+        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        this.eventPublisher = (EventPublisher) context.getBean("eventPublisher");
         this.eventPublisher.publishEvent("newPurchaseEvent");
     }
 

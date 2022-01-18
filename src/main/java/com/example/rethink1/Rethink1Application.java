@@ -53,7 +53,8 @@ public class Rethink1Application implements CommandLineRunner {
                 "(1) To check inventory\n" +
                 "(2) To add customer transaction\n" +
                 "(3) To check incoming stock orders\n" +
-                "(4) Exit\n";
+                "(4) To check a customer's purchase history\n" +
+                "(5) Exit\n";
         System.out.println(message);
 
         int choice = sc.nextInt();
@@ -72,6 +73,9 @@ public class Rethink1Application implements CommandLineRunner {
                     System.out.println(message);
                     break;
                 case 4:
+                    checkCustomerHistory();
+                    break;
+                case 5:
                     dbm.closeDataBase();
                     System.exit(springApplication.exit(context));
                     break;
@@ -131,6 +135,10 @@ public class Rethink1Application implements CommandLineRunner {
 
     public void checkStockOrder() {
         // TODO: implementation
+    }
+
+    public void checkCustomerHistory() {
+        System.out.println("Enter customer UID");
     }
 
 }
