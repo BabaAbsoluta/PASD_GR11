@@ -3,6 +3,7 @@ package com.example.rethink1;
 import com.example.rethink1.database.DatabaseManager;
 import com.example.rethink1.events.Event;
 import com.example.rethink1.events.EventPublisher;
+import com.example.rethink1.payment_system.Customer;
 import com.example.rethink1.stock_ordering.SupplierAPI;
 import com.example.rethink1.stock_ordering.VirtualBasket;
 import com.example.rethink1.stock_prediction.InventorySpace;
@@ -39,6 +40,27 @@ public class Rethink1Application implements CommandLineRunner {
     public void run(String... args) throws Exception {
         dbm = DatabaseManager.getInstance();
         supplierAPI = SupplierAPI.getInstance();
+
+        Customer c1 = new Customer("1111","Miguel","megusta",1400,true);
+        Customer c2 = new Customer("1112","Rodrigo","megustaMiguel",1900,true);
+        Customer c3 = new Customer("1113","Fernando","varoom",1700,true);
+        Customer c4 = new Customer("1114","Windy","megusta",1500,true);
+        Customer c5 = new Customer("1115","Esteban Julio Ricardo Montoya de la Rosa Ramirez","password",1400,true);
+        Customer c6 = new Customer("1116","Bob","chicken",999,false);
+        Customer c7 = new Customer("1117","Lola","labradoodle",1800,true);
+        Customer c8 = new Customer("1118","Rochelle","VvKyyu2;rrqUB&b",1500,true);
+        Customer c9 = new Customer("1119","Pink","floyd",1300,true);
+
+
+        ShoppingPortfolio s1 = new ShoppingPortfolio("1111");
+        ShoppingPortfolio s2 = new ShoppingPortfolio("1112");
+        ShoppingPortfolio s3 = new ShoppingPortfolio("1113");
+        ShoppingPortfolio s4 = new ShoppingPortfolio("1114");
+        ShoppingPortfolio s5 = new ShoppingPortfolio("1115");
+        ShoppingPortfolio s6 = new ShoppingPortfolio("1116");
+        ShoppingPortfolio s7 = new ShoppingPortfolio("1117");
+        ShoppingPortfolio s8 = new ShoppingPortfolio("1118");
+        ShoppingPortfolio s9 = new ShoppingPortfolio("1119");
 
 //         Product p1 = new Product("Butter",10,3,2,239, "30176240107", 0.09);
 //         Product p2 = new Product("Shower Gel",10,8,2,959, "668205008014", 0.21);
