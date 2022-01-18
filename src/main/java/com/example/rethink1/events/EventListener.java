@@ -39,9 +39,6 @@ public class EventListener implements ApplicationListener<Event> {
             if (approval) {
                 stockforecast.sendPrediction();
             }
-            else {
-                System.out.println("Not approved");
-            }
 
         }
 
@@ -49,8 +46,6 @@ public class EventListener implements ApplicationListener<Event> {
             // create a new stock forecast
             this.stockforecast = new StockPrediction();
             stockforecast.predict();
-
-            // process payment
         }
 
         if (event.getMessage().equals("newStockEvent")) {
