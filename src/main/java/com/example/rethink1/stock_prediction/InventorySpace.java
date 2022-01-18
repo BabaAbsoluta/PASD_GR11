@@ -89,6 +89,16 @@ public class InventorySpace implements Serializable {
         dbm.addInventory(inventorySpace);
     }
 
+    public void changeQuantityInventory(Product newProduct){
+        for (int i = 0; i < this.products.size(); i++) {
+            Product inventoryProduct = products.get(i);
+            if(inventoryProduct.getName().equals(newProduct.getName())){
+                int newQuantity = inventoryProduct.getNr_of_products() + newProduct.getNr_of_products();
+                products.get(i).setNr_of_products(newQuantity);
+            }
+        }
+    }
+
     /**
      * Shows the contents of the inventory
      */

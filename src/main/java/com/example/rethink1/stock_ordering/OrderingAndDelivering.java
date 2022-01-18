@@ -2,6 +2,7 @@ package com.example.rethink1.stock_ordering;
 
 import com.example.rethink1.database.DatabaseManager;
 import com.example.rethink1.events.EventPublisher;
+import lombok.Getter;
 import org.json.JSONException;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class OrderingAndDelivering {
 
     private Supplier supplier;

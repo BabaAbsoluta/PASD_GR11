@@ -24,6 +24,7 @@ public class Supplier {
     protected List<Order> supplierOrderList;
     @OneToMany(cascade = CascadeType.ALL)
     protected List<Delivery> supplierDeliveryList;
+    @Getter
     transient SupplierAPI supplierAPI;
 
     /**
