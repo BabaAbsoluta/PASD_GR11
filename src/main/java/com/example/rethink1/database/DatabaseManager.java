@@ -123,9 +123,9 @@ public class DatabaseManager {
     }
 
     public void addShoppingPortfolio(ShoppingPortfolio shoppingPortfolio){
-        manager.getTransaction().begin();
+        //manager.getTransaction().begin();
         manager.persist(shoppingPortfolio);
-        manager.getTransaction().commit();
+        //manager.getTransaction().commit();
     }
 
     public void addManager(Manager supermarketManager){

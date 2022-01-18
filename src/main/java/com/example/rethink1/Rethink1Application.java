@@ -116,7 +116,7 @@ public class Rethink1Application implements CommandLineRunner {
 //        dbm.addShoppingPortfolio(s7);
 //        dbm.addShoppingPortfolio(s8);
 //        dbm.addShoppingPortfolio(s9);
-
+//
 
         InventorySpace inventorySpace = dbm.getInfoInventory().get(0);
 
@@ -200,10 +200,6 @@ public class Rethink1Application implements CommandLineRunner {
         for (ShoppingPortfolio s : shoppingPortfolioList) {
             if (s.getCustomerUID().equals(uid)) {
                 System.out.println(s.getPurchaseHistory());
-                List<VirtualBasket> virtualBaskets = s.getPurchaseHistory();
-                for (VirtualBasket b : virtualBaskets) {
-                    System.out.println(b);
-                }
             }
         }
     }

@@ -46,6 +46,7 @@ public class EventListener implements ApplicationListener<Event> {
         if (event.getMessage().equals("newPredictionEvent")) {
 
             // create an orderline
+
             this.orderline = stockforecast.predict();
 
             // approve it from manager
@@ -95,6 +96,7 @@ public class EventListener implements ApplicationListener<Event> {
                     // remove it from the inventory
                     inventorySpace.removeProduct(p, quantity);
                     // add it to the virtual basket's products
+                    p.setNr_of_products(quantity);
                     products.add(p);
                     i++;
                 }
@@ -115,6 +117,7 @@ public class EventListener implements ApplicationListener<Event> {
                     s.addPurchase(basket);
                     dbm.removeShoppingPortfolio(String.valueOf(uid));
                     dbm.addShoppingPortfolio(s);
+                    System.out.println(s);
                     found = true;
                 }
             }
