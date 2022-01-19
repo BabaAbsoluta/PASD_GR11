@@ -45,6 +45,7 @@ public class InventorySpace implements Serializable {
     /** Removes a product from the inventory space. Done when a customer buys a product
      * @param product Product being bought by the customer
      */
+
     public void removeProduct(Product product, int quantity) {
         DatabaseManager dbm = DatabaseManager.getInstance();
         InventorySpace inventorySpace = dbm.getInfoInventory().get(0);

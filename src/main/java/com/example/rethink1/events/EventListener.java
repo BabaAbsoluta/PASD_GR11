@@ -10,6 +10,7 @@ import lombok.SneakyThrows;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import javax.jdo.annotations.Transactional;
 import javax.swing.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.Scanner;
 public class EventListener implements ApplicationListener<Event> {
 
     protected StockPrediction stockforecast;
-    protected OrderLine orderline;
+    protected static OrderLine orderline;
     protected InventorySpace inventorySpace;
     protected VirtualBasket virtualBasket;
     protected OrderingAndDelivering orderingAndDelivering;
@@ -38,6 +39,7 @@ public class EventListener implements ApplicationListener<Event> {
     @org.springframework.context.event.EventListener
     @SneakyThrows
     @Override
+    @Transactional
     public void onApplicationEvent(Event event) {
 
         // what to do when event is triggered
@@ -46,17 +48,14 @@ public class EventListener implements ApplicationListener<Event> {
         if (event.getMessage().equals("newPredictionEvent")) {
 
             // create an orderline
-
+            stockforecast = new StockPrediction();
             this.orderline = stockforecast.predict();
-
             // approve it from manager
             // get manager from database
             Manager manager = new Manager();
             boolean approval = manager.approve(orderline);
 
             if (approval) {
-                stockforecast.sendPrediction();
-
                 //sending orderLine to stock and delivery system
                 orderingAndDelivering = OrderingAndDelivering.getInstance();
                 orderingAndDelivering.receiveOrderLine(orderline);
@@ -114,7 +113,7 @@ public class EventListener implements ApplicationListener<Event> {
             for (ShoppingPortfolio s: shoppingPortfolioList) {
                 // check if customer has a shopping portfolio
                 if (s.getCustomerUID().equals(String.valueOf(uid))) {
-                    s.addPurchase(basket);
+                    s.getPurchaseHistory().add(basket);
                     dbm.removeShoppingPortfolio(String.valueOf(uid));
                     dbm.addShoppingPortfolio(s);
                     System.out.println(s);

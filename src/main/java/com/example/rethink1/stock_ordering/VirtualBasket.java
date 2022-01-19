@@ -12,6 +12,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.jdo.annotations.NotPersistent;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,11 +21,14 @@ import java.util.Date;
 @Setter
 @Entity
 
-public class VirtualBasket {
+public class VirtualBasket implements Serializable {
     @Id
+    @Column(name = "id", nullable = false)
+    private Long id;
+
     private int customerID;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     protected ArrayList<Product> products;
     protected String paymentMethod;
     protected LocalDate date;
